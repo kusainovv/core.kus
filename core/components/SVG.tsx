@@ -18,7 +18,7 @@ type MouseEventTriggerVariant = 'enter' | 'leave';
 
 /**
  * @param svg - svg for prepare, 
- * @syntax const SVG = <svg></svg>
+ * @syntax const SVG = '<svg></svg>'
  *
  * @param fromColor - initial color of svg (in HEX format) 
  * @param toColor - color in which svg will be repainted
