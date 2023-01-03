@@ -14,6 +14,17 @@ const Image = styled.img`
     height: 100%;
 `;
 
+/**
+ * @desktop - src for desktop
+ * @laptop - src for laptop
+ * @mobile - src for mobile
+ * @alt - native attribute alt
+ * @order - number of picture
+ * @createRef - function for registr a ref
+ * @desktopQuery - media query when size changed and src changed in desktop
+ * @laptopQuery - media query when size changed and src changed in laptop
+ * @mobileQuery - media query when size changed and src changed in mobile
+ */
 export const ResponsivePicture = (props: ResponsivePictureProps) => {
     return <Picture { ...props.extraProps } ref={props.createRef} data-order={props.order}>
         <source srcSet={props.desktop} media={`(min-width: ${props.desktopQuery})`} type='image/webp' />

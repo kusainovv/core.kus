@@ -29,6 +29,12 @@ interface LazyLoadImagesProps {
     mobileQuery: string
 }
 
+/**
+ * @images - images for lazy loading
+ * @desktopQuery - define the media query when image must resize for desktop
+ * @laptopQuery - define the media query when image must resize for laptop
+ * @mobileQuery - define the media query when image must resize for mobile
+ */
 export const LazyLoadImages = (props: LazyLoadImagesProps) => {
 
     const [currentImage, setCurrentImage] = useState(0);
@@ -40,15 +46,18 @@ export const LazyLoadImages = (props: LazyLoadImagesProps) => {
             entries.forEach((imageView) => {
                 setCurrentImage(
                     imageView.isIntersecting 
+                      // use data-order attribute for define current slide/picture
                     ? Number(imageView.target.getAttribute("data-order"))
                     : entries[0].boundingClientRect.y > 0 ? currentImage - 1 : currentImage + 1)})
         });
 
+        // hidde other images if they're at user view
         viewedImages.forEach(img => typeof img !== 'undefined' && img.current ? observer.observe(img.current) : null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentImage]);
 
 
+    // registr a new picture
     const showNextPicture = () => {
         const image = createRef();
         viewedImages.push(image as RefObject<HTMLPictureElement>);
