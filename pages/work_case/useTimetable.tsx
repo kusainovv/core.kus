@@ -42,7 +42,7 @@ export const useTimetable = (allEvents: ScheduleEvent[]): Timetable => {
 
     const getMinMaxDate = (flag: string, eventsToMoments = allEvents.map(
         ({ start_datetime, end_datetime }) => [start_datetime, end_datetime]).flat().map(
-            (event: string) => moment(event)) as any) => {
+            (event: string) => moment(event))) => {
         const eventsByDay: moment.Moment[] = eventsToMoments.map((
             { _i }: { _i: string }, key: number) => ({ key, date: moment(_i), }))
             .map(({ date }: moment.Moment) => date);
@@ -65,7 +65,7 @@ export const useTimetable = (allEvents: ScheduleEvent[]): Timetable => {
         const daysSource = days.filter(shouldKeepDay);
         for (let step = 0; step <= daysSource.length - 1 && daysSource.length - 1 > 0; step += 6) {
             daysFromFirstToLast.push(
-                daysSource.slice(step, step + 6 >= daysSource.length ? daysSource.length : step + 6) as any
+                daysSource.slice(step, step + 6 >= daysSource.length ? daysSource.length : step + 6)
             );
         }
 
@@ -100,7 +100,7 @@ export const useTimetable = (allEvents: ScheduleEvent[]): Timetable => {
             makeRow([2, 0], [2, 1], 6),
             makeRow([3, 0], [3, 1], "Break"),
             makeRow([4, 0], [4, 1], 6),
-            // makeRow([5, 0], [5, 1], "Consultancy Hours"),
+            makeRow([5, 0], [5, 1], "Consultancy Hours"),
         ];
 
         const calculateContent = (week: moment.Moment[], row: TimeTableT): (ScheduleEvent[] | ScheduleEventSynthetic[])[] =>
@@ -118,8 +118,7 @@ export const useTimetable = (allEvents: ScheduleEvent[]): Timetable => {
             });
 
         const timeTableExtended: TimeTableT[] = [...timeTable, afterConsultancyHours(timeTable)];
-        const sortedTimeTable = timeTableExtended.filter((i: any) => i !== false);
-        return sortedTimeTable.map((currentRow: TimeTableT) => ({
+        return timeTableExtended.map((currentRow: TimeTableT) => ({
             ...currentRow,
             content: calculateContent(week, currentRow),
         }));

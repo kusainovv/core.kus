@@ -1,8 +1,5 @@
 import styled from '@emotion/styled'
-import { media } from '../utils/media';
-
-const primaryColor = (p: any) => p.theme.palette.primary.main;
-const primaryText = (p: any) => p.theme.palette.text.primary;
+import { media } from '../../core/utils/media';
 
 export const AllSchedulesContainer = styled.div`
     display: grid;
@@ -50,8 +47,6 @@ export const Title = styled.a`
     font-style: normal;
     font-weight: bold;
     text-decoration: none;
-
-    color: ${primaryColor};
 `;
 
 export const Tutor = styled.div`
@@ -59,7 +54,6 @@ export const Tutor = styled.div`
     font-weight: normal;
     line-height: 121%;
 
-    color: ${primaryText};
 `;
 
 export const ShortTitle = styled.div`
@@ -67,8 +61,6 @@ export const ShortTitle = styled.div`
 
     font-style: normal;
     font-weight: bold;
-
-    color: ${primaryText};
 `;
 
 export const ScheduleBlock = styled.div`
@@ -89,7 +81,6 @@ export const AddToCalendarButton = styled.div`
     text-align: center;
     text-transform: uppercase;
 
-    color: ${primaryColor};
     padding: 7px;
     cursor: pointer;
 `;

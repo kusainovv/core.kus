@@ -1,6 +1,6 @@
 import React from "react";
 import { Schedule } from "./types";
-import { downloadCalendar } from "./AddToCalendar"; // function 
+import { downloadCalendar } from "./AddToCalendar";
 
 import {
   AddToCalendarButton,
@@ -27,7 +27,7 @@ export const ScheduleComponent = (props: {schedule: Schedule, showTime?: boolean
     <ScheduleBlock>
       <Block light>
         <div>
-          <Title to={course._id}>{course.title}</Title>
+          <Title href={course._id}>{course.title}</Title>
 
           <Tutor>
             {participantName(tutor)}
