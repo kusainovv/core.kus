@@ -57,27 +57,26 @@ export const LazyLoadImages = (props: LazyLoadImagesProps) => {
     }, [currentImage]);
 
 
-    // registr a new picture
+    // register a new picture
     const showNextPicture = () => {
         const image = createRef();
         viewedImages.push(image as RefObject<HTMLPictureElement>);
         return image as RefObject<HTMLPictureElement>;
     }
 
-    return  <Wrapper>
+    return <Wrapper>
         {
             props.images.map((image: LazyLoadImage, key: number) => {
-                if (currentImage === key) {
-                    return <React.Fragment key={key}>
+                return currentImage === key 
+                    ? <React.Fragment key={key}>
                         <ResponsivePicture desktop={image.desktop} laptop={image.laptop} 
                             mobile={image.mobile} alt={image.alt} 
                             createRef={showNextPicture} order={key}
                             desktopQuery={props.desktopQuery}
                             laptopQuery={props.laptopQuery}
-                            mobileQuery={props.mobileQuery}               
-                        />
-                     </React.Fragment>}
-                 return <Skeleton key = {key} />
+                            mobileQuery={props.mobileQuery} />
+                     </React.Fragment>
+                    : <Skeleton key = {key} />
             })
         }
     </Wrapper>
