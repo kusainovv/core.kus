@@ -29,7 +29,7 @@ interface ThemeButtonProps {
 
 export const ThemeButton = (props: ThemeButtonProps) => {
     const { theme, switchTheme } = useThemeMode();
-    return <Wrapper onClick={() => {switchTheme()}} wrapperWidth={props.wrapperWidth} theme={theme} transition={props.transition}>
+    return <Wrapper onClick={switchTheme} wrapperWidth={props.wrapperWidth} theme={theme} transition={props.transition}>
         <Slider theme={theme} transition={props.transition} wrapperWidth={props.wrapperWidth} sliderWidth={props.sliderWidth} />
     </Wrapper>
 }
