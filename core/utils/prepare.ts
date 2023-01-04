@@ -1,7 +1,12 @@
-export const prepare = (callback: any, error_message: string) => {
+/**
+ * @callback problematic function 
+ * @function_name name of function for showing next
+ * @returns callback
+ */
+export const prepare = (callback: any, function_name: string) => {
     try {
         if (typeof callback !== 'function') {
-            throw new Error(`Function ${callback} isn't callable`);
+            throw new Error(`Function ${function_name} isn't callable`);
         }
 
         return callback();

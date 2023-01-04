@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { prepare } from "./prepare";
 import { useSSR } from "./useSSR"
-
 
 class CookieCore {
     public cookie = document.cookie;
@@ -37,21 +36,30 @@ class Cookie extends CookieCore {
 } 
 
 
+interface CookieDataOutput {
+    addCookie: (cookie_attribute: string, cookie_value: string) => void,
+    getCookies: () => void,
+    clearCookie: () => void,
+    changeCookieValue: (cookie_attribute: string, cookie_value: string) => void,
+    deleteCookieField: (cookie_attribute: string) => void,
+    errors: string | null,
+    hasError: boolean
+}
 
 
-export const useCookie = () => {
+export const useCookie = () : CookieDataOutput => {
     const { hydrationProccessCompleted } = useSSR();
-
-    const [errors, setErrors] = useState<string>('');
+    const [errors, setErrors] = useState<string | null>(null);
 
     useEffect(() => {
         if (hydrationProccessCompleted && !window.navigator.cookieEnabled) {
-            setErrors('Cookie was disabled');
+            setErrors('Cookies are disabled');
         }
     }, [hydrationProccessCompleted]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
 
-    const cookies = hydrationProccessCompleted ? new Cookie() : null;
+    const cookies = hydrationProccessCompleted && !errors?.length ? new Cookie() : null;
+
     const addCookie = (cookie_attribute: string, cookie_value: string) => prepare(() => cookies?.add(cookie_attribute, cookie_value), 'add');
     const getCookies = () => prepare(cookies?.get, 'get');
     const clearCookie = () => prepare(cookies?.clear, 'clear');
@@ -64,6 +72,7 @@ export const useCookie = () => {
         clearCookie,
         changeCookieValue,
         deleteCookieField,
-        errors
+        errors,
+        hasError: !!errors?.length
     }
 }
