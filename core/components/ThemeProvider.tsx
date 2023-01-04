@@ -1,8 +1,10 @@
 import React, { createContext, ReactNode, useContext } from "react";
 import { useThemeMode } from "../utils/useThemeMode";
 
+export type ThemeMode = 'dark' | 'white';
+
 interface Theme {
-    theme: 'dark' | 'white',
+    theme: ThemeMode,
     switchTheme: (mode?: string) => void 
 }
 
