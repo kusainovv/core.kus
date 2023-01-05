@@ -11,8 +11,7 @@ const LanguageContext = createContext<Theme>({ lang: 'ru', switchLang: (x: Langu
 
 export const LanguageProvider : React.FC<{ children: ReactNode }> = ({ children }) => { 
     const [lang, setLang] = useState<LanguageCode>('ru');
-
-    return <LanguageContext.Provider value={{ lang, switchLang: (langCode: string) => { setLang(langCode as LanguageCode) } }}>
+    return <LanguageContext.Provider value={{ lang, switchLang: (langCode: string) => { setLang(langCode as LanguageCode) }}}>
         {children}
     </LanguageContext.Provider>
 }

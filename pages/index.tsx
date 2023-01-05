@@ -14,12 +14,13 @@ import { MyWorkExperience } from "./components/Bio/MyWorkExperience";
 import { OtherProgramming } from "./components/Bio/OtherProgramming";
 import { Languages } from "./components/Languages";
 import { OtherProgrammingHackathons } from "./components/OtherProgrammingHackathons";
+import { dictionary } from "./dict";
 
-const Navbar = ({ switchTheme, theme, onChooseHandler }: { switchTheme: any, theme: ThemeMode, onChooseHandler: (x: LanguageCode) => void }) => {
+const Navbar = ({ switchTheme, theme, onChooseHandler, currentLang }: { switchTheme: any, currentLang: LanguageCode, theme: ThemeMode, onChooseHandler: (x: LanguageCode) => void }) => {
   return <NavbarWrapper>    
     <Row>
-      <Languages.Russian onChooseHandler={onChooseHandler} />
-      <Languages.English onChooseHandler={onChooseHandler} />
+      <Languages.Russian onChooseHandler={onChooseHandler} currentLang={currentLang} />
+      <Languages.English onChooseHandler={onChooseHandler} currentLang={currentLang} />
     </Row>
     
     <ThemeButton transition="0.3s" wrapperWidth={50} sliderWidth={22} switchHandler={switchTheme} theme={theme} />
@@ -35,61 +36,63 @@ export default function Home() {
   }, [theme]);
 
   return <Wrapper themeMode={theme}>
-    <Navbar switchTheme={switchTheme} theme={theme} onChooseHandler={(x: LanguageCode) => {switchLang(x)}} />
+    <Navbar switchTheme={switchTheme} theme={theme} currentLang={lang} onChooseHandler={(x: LanguageCode) => { 
+      switchLang(x)
+    }} />
 
     <Profile color={theme === 'dark' ? 'black' : 'white'}>
     
       <ShortDescription>
-        <Title>{`Hello, I'm Ratmir Kusainov`}</Title>
+        <Title>{dictionary(lang).titles.greeting}</Title>
 
-        <Accordion title="My tech skills" theme={theme}>
+        <Accordion title={dictionary(lang).titles.techSkills} theme={theme}>
           <Tab>
             <MyTechnicalSkills />
           </Tab>
         </Accordion>
 
 
-        <Accordion title="My work experience" theme={theme}>
+        <Accordion title={dictionary(lang).titles.workExp} theme={theme}>
           <Tab>
-            <MyWorkExperience theme={theme} />
+            <MyWorkExperience theme={theme} lang={lang} />
           </Tab>
         </Accordion>
 
 
-        <Accordion title="About me" theme={theme}>
+        <Accordion title={dictionary(lang).titles.aboutMe} theme={theme}>
           <Tab>
-            <AboutMe />
+            <AboutMe lang={lang} />
           </Tab>  
         </Accordion>
 
 
-        <Accordion title="Other programming and hackathons" theme={theme}>
+        <Accordion title={dictionary(lang).titles.hackathons} theme={theme}>
           <Tab>
             <OtherProgrammingHackathons theme={theme} />
           </Tab>  
         </Accordion>
 
 
-        <Accordion title="Other programming (Medium & CodeWars)" theme={theme}>
+        <Accordion title={dictionary(lang).titles.otherProgramming} theme={theme}>
           <Tab>
-            <OtherProgramming theme={theme} />
+            <OtherProgramming theme={theme} lang={lang} />
           </Tab>  
         </Accordion>
 
-        <Accordion title="Github and production code" theme={theme}>
+        <Accordion title={dictionary(lang).titles.otherProgramming} theme={theme}>
           <Tab>
-            <GithubProductionCode theme={theme} />
+            <GithubProductionCode theme={theme} lang={lang} />
           </Tab>  
         </Accordion>
 
-        <Title>Contact with me</Title>
-        <Link href='https://t.me/kekw_k' target={'_blank'} rel='noreferrer noopener' theme={theme}>
+        <Title>{dictionary(lang).titles.contactWithMe}</Title>
+        <SocialLink href='https://t.me/kekw_k' target={'_blank'} rel='noreferrer noopener' theme={theme} isBlock={false}>
           <Contact>telegram (kekw_k)</Contact>
-        </Link>
+        </SocialLink>
 
-        <Link href='mailto:kusainovratmir89@gmail.com' target={'_blank'} rel='noreferrer noopener' theme={theme}>
+        <SocialLink href='mailto:kusainovratmir89@gmail.com' target={'_blank'} rel='noreferrer noopener' theme={theme} isBlock={false}>
           <Contact>gmail / kusainovratmir89@gmail.com</Contact>
-        </Link>
+        </SocialLink>
       </ShortDescription>
     </Profile>
   </Wrapper>
@@ -147,4 +150,9 @@ const ShortDescription = styled.div`
 const Tab = styled.div`
   margin: 0 0;
   padding-left: 10px;
+`;
+
+
+const SocialLink = styled(Link)`
+  margin: 0;
 `;

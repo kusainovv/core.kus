@@ -20,8 +20,9 @@ export const List = styled.ul`
 `;
 
 
-export const Link = styled.a<{ theme: ThemeMode }>`
-  display: block;
+export const Link = styled.a<{ theme: ThemeMode, isBlock: true | false }>`
+  margin: 0 4px;
+  display: ${ props => props.isBlock };
   width: fit-content;
   font-size: 18px;
   font-weight: 600;

@@ -1,40 +1,47 @@
 import styled from "@emotion/styled";
 import React from "react";
+import { LanguageCode } from "../../../core/components/LanguageProvider";
 import { ThemeMode } from "../../../core/components/ThemeProvider";
+import { dictionary } from "../../dict";
 import { Link, List } from "./Bio.style";
 
 
-export const GithubProductionCode = (props: { theme: ThemeMode }) => {
+export const GithubProductionCode = (props: { theme: ThemeMode, lang: LanguageCode }) => {
     return <List>
     <li>
-        <Link href="https://github.com/kusainovv" theme={props.theme}>My Github</Link>
+        <Link href="https://github.com/kusainovv" theme={props.theme} isBlock={false}>{dictionary(props.lang).common.my}Github</Link>
         <ul>
             <Prompt>
-                <b>Why empty?</b>
+                <b>{dictionary(props.lang).githubProductionCode.why_empty}</b>
                 <br />
 
-                <span> Because i hidde all repositories </span>
+                <span>
+                    {dictionary(props.lang).githubProductionCode.why_empty_answer}
+                </span>
             </Prompt>
         </ul>
     </li>
 
     <Prompt>
-      <b>Where can i see production code?</b>
+      <b> {dictionary(props.lang).githubProductionCode.whereProdCode}</b>
       <ul>
         
         <Prompt>
-            Check my own core where you can find code that i wrote for production in
-            <Link href='https://github.com/kusainovv?tab=repositories' theme={props.theme}> this repository</Link>
-            <i>(of course, i wrote more code)</i>
+            {dictionary(props.lang).githubProductionCode.corePath}
+            <LinkRepository href='https://github.com/kusainovv?tab=repositories' theme={props.theme} isBlock={false}>
+                {dictionary(props.lang).common.thisRepository}
+            </LinkRepository>
+            
+            <i>({dictionary(props.lang).githubProductionCode.iWroteMore})</i>
         </Prompt>
 
         <Prompt>
-            <b>In core.kus</b>, look at core folder where you can see my own written code.
+            <b>{dictionary(props.lang).common.in} core.kus</b>, {dictionary(props.lang).githubProductionCode.corePrompt}.
         </Prompt>
 
         <Prompt>
-            <b>In pages/work_case</b>, you can see the real production code
-            this isn't the best code that i wrote for all time, this is just code snippet.
+            <b>{dictionary(props.lang).common.in} pages/work_case</b>, {dictionary(props.lang).githubProductionCode.readProdCode}
+            {dictionary(props.lang).githubProductionCode.onlySnippet}.
         </Prompt>
         
       </ul>
@@ -44,4 +51,8 @@ export const GithubProductionCode = (props: { theme: ThemeMode }) => {
 
 const Prompt = styled.li`
     margin: 10px 0;
+`;
+
+const LinkRepository = styled(Link)`
+    
 `;
