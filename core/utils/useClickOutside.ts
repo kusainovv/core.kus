@@ -2,7 +2,6 @@ import { MutableRefObject, RefObject } from "react";
 import { useEventListener } from "./useEventListener"
 
 /**
- * 
  * @param trigger - define border of element
  * @param handleEvent - callback when click was outside
  */

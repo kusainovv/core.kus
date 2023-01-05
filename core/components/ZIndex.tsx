@@ -10,7 +10,7 @@ import ReactDOM from "react-dom";
 export const ZIndex : React.FC<{ children: ReactNode }> = ({ children }) => {
     const ref_content = createRef<HTMLDivElement>();
 
-    const [container, setContainer] = useState<any>(null);
+    const [container, setContainer] = useState<HTMLElement | null>(null);
     useEffect(() => {
         if (container === null) {
             setContainer(document.createElement('div'));

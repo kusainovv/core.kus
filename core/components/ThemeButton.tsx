@@ -1,13 +1,12 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { useThemeMode } from '../utils/useThemeMode';
 import { ThemeMode } from './ThemeProvider';
 
 const Wrapper = styled.div<{ theme: ThemeMode, transition: string, wrapperWidth: number }>`
     width: ${ props => props.wrapperWidth }px;
     height: 22px;
 
-    background-color: ${ props => props.theme === 'white' ? 'red' : 'red'};
+    background-color: #363636;
     border-radius: 30px;
 `;
 
@@ -16,20 +15,21 @@ const Slider = styled.button<{ theme: ThemeMode, transition: string, wrapperWidt
     height: 22px;
     border-radius: 100%;
     border: none;
-    transform: translateX(${ props => props.theme === 'white' ? '0%' : `calc(${props.wrapperWidth - props.sliderWidth}px)` });
-    background-color: ${ props => props.theme === 'white' ? 'white' : 'black'};
+    transform: translateX(${ props => props.theme === 'white' ? '0px' : `calc(${props.wrapperWidth - props.sliderWidth}px)` });
+    background-color: white;
     transition: ${ props => props.transition };
 `;
 
 interface ThemeButtonProps {
     transition: string,
     sliderWidth: number,
-    wrapperWidth: number
+    wrapperWidth: number,
+    switchHandler: Function,
+    theme: ThemeMode
 }
 
 export const ThemeButton = (props: ThemeButtonProps) => {
-    const { theme, switchTheme } = useThemeMode();
-    return <Wrapper onClick={switchTheme} wrapperWidth={props.wrapperWidth} theme={theme} transition={props.transition}>
-        <Slider theme={theme} transition={props.transition} wrapperWidth={props.wrapperWidth} sliderWidth={props.sliderWidth} />
+    return <Wrapper onClick={() => props.switchHandler()} wrapperWidth={props.wrapperWidth} theme={props.theme} transition={props.transition}>
+        <Slider theme={props.theme} transition={props.transition} wrapperWidth={props.wrapperWidth} sliderWidth={props.sliderWidth} />
     </Wrapper>
 }

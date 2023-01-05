@@ -3,7 +3,7 @@ import React, { MouseEventHandler, ReactNode } from "react";
 import { visibility } from "../utils/visibility";
 import { ZIndex } from "./ZIndex";
 
-const PopUpContent = styled.div`
+const PopUpContent = styled.div<{ backgroundContent: string }>`
     z-index: 101;
     top: 50%;
     left: 50%;
@@ -13,7 +13,7 @@ const PopUpContent = styled.div`
     height: auto;
     
     position: absolute;
-    background-color: blue;
+    background-color: ${ props => props.backgroundContent };
 `;
 
 const CloseZone = styled.div<{ backgroundCloseZone: string }>`
@@ -31,23 +31,24 @@ const PopUpVisibility = styled.div<{ isOpened: boolean, transition: string }>`
     transition: ${ props => props.transition };
 `;
 
-
 interface PopupProps {
     backgroundCloseZone: string,
     isOpened: boolean,
     children: ReactNode,
     onCloseHandler: MouseEventHandler<HTMLDivElement>,
-    transition: string
+    transition: string,
+    backgroundContent: string,
+    chooseOnly: boolean,
 }
 
-export const Popup : React.FC<PopupProps> = ({ children, isOpened, backgroundCloseZone, onCloseHandler, transition }) => {
+export const Popup : React.FC<PopupProps> = ({ children, isOpened, backgroundCloseZone, onCloseHandler, transition, backgroundContent, chooseOnly }) => {
     return <ZIndex>
         <PopUpVisibility isOpened={isOpened} transition={transition}>
-            <PopUpContent>
+            <PopUpContent backgroundContent={backgroundContent}>
                 {children}
             </PopUpContent>
 
-            <CloseZone backgroundCloseZone={backgroundCloseZone} onClick={onCloseHandler} />
+            <CloseZone backgroundCloseZone={backgroundCloseZone} onClick={ chooseOnly ? () => {} : onCloseHandler} />
         </PopUpVisibility>
     </ZIndex>
 }

@@ -17,4 +17,4 @@ export const ThemeProvider : React.FC<{ children: ReactNode }> = ({ children }) 
     </ThemeContext.Provider>
 }
 
-export const useTheme = () => useContext(ThemeContext);
+export const useThemeApplication = () => useContext(ThemeContext);
