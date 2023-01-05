@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
 import React, { ReactNode, useState } from "react";
+import { ThemeMode } from "./ThemeProvider";
 
-const AccordionItem = styled.div`
-  background-color: #e3e3e3;
+const AccordionItem = styled.div<{ theme: ThemeMode }>`
+  background-color: ${ props => props.theme === 'dark' ? '#404040' : 'whitesmoke' };
 `;
 
 const AccordionTitle = styled.div`
@@ -18,13 +19,17 @@ const AccordionContent = styled.div`
   border-bottom: 1px solid black;
 `;
 
-export const Accordion : React.FC<{ children: ReactNode, title: string }> = ({children, title}) => {
+const AccordionTitleText = styled.p`
+  margin: 0;
+`;
+
+export const Accordion : React.FC<{ children: ReactNode, title: string, theme: ThemeMode }> = ({children, title, theme}) => {
     const [isActive, setIsActive] = useState(false);
 
     return (
-      <AccordionItem>
+      <AccordionItem theme={theme}>
         <AccordionTitle className="accordion-title" onClick={() => setIsActive(!isActive)}>
-          <div>{title}</div>
+          <AccordionTitleText>{title}</AccordionTitleText>
           <div>{isActive ? '-' : '+'}</div>
         </AccordionTitle>
         { isActive ? <AccordionContent>{children}</AccordionContent> : null }

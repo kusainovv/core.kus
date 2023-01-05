@@ -7,6 +7,7 @@ import { ThemeButton } from "../core/components/ThemeButton"
 import { ThemeMode } from "../core/components/ThemeProvider";
 import { useThemeMode } from "../core/utils/useThemeMode";
 import { AboutMe } from "./components/Bio/AboutMe";
+import { Link } from "./components/Bio/Bio.style";
 import { GithubProductionCode } from "./components/Bio/GithubProductionCode";
 import { MyTechnicalSkills } from "./components/Bio/MyTechnicalSkills";
 import { MyWorkExperience } from "./components/Bio/MyWorkExperience";
@@ -25,7 +26,7 @@ const Navbar = ({ switchTheme, theme, onChooseHandler }: { switchTheme: any, the
   </NavbarWrapper>
 }
 
-const Home = () => {
+export default function Home() {
   const { theme, switchTheme } = useThemeMode();
   const { lang, switchLang } = useLanguage();
 
@@ -41,63 +42,58 @@ const Home = () => {
       <ShortDescription>
         <Title>{`Hello, I'm Ratmir Kusainov`}</Title>
 
-        <Accordion title="My tech skills">
+        <Accordion title="My tech skills" theme={theme}>
           <Tab>
             <MyTechnicalSkills />
           </Tab>
         </Accordion>
 
 
-        <Accordion title="My work experience">
+        <Accordion title="My work experience" theme={theme}>
           <Tab>
-            <MyWorkExperience />
+            <MyWorkExperience theme={theme} />
           </Tab>
         </Accordion>
 
 
-        <Accordion title="About me">
+        <Accordion title="About me" theme={theme}>
           <Tab>
             <AboutMe />
           </Tab>  
         </Accordion>
 
 
-        <Accordion title="Other programming and hackathons">
+        <Accordion title="Other programming and hackathons" theme={theme}>
           <Tab>
-            <OtherProgrammingHackathons />
+            <OtherProgrammingHackathons theme={theme} />
           </Tab>  
         </Accordion>
 
 
-        <Accordion title="Other programming (Medium & CodeWars)">
+        <Accordion title="Other programming (Medium & CodeWars)" theme={theme}>
           <Tab>
-            <OtherProgramming />
+            <OtherProgramming theme={theme} />
           </Tab>  
         </Accordion>
 
-        <Accordion title="Github and production code">
+        <Accordion title="Github and production code" theme={theme}>
           <Tab>
-            <GithubProductionCode />
+            <GithubProductionCode theme={theme} />
           </Tab>  
         </Accordion>
 
-        <Title>contact_with_me()</Title>
-        <Link href='https://t.me/kekw_k' target={'_blank'} rel='noreferrer noopener'>
+        <Title>Contact with me</Title>
+        <Link href='https://t.me/kekw_k' target={'_blank'} rel='noreferrer noopener' theme={theme}>
           <Contact>telegram (kekw_k)</Contact>
         </Link>
 
-        <Link href='mailto:kusainovratmir89@gmail.com'>
+        <Link href='mailto:kusainovratmir89@gmail.com' target={'_blank'} rel='noreferrer noopener' theme={theme}>
           <Contact>gmail / kusainovratmir89@gmail.com</Contact>
         </Link>
       </ShortDescription>
     </Profile>
   </Wrapper>
 }
-
-
-export default withTheme(Home);
-
-
 
 const NavbarWrapper = styled.div`
   padding: 20px 10px;
@@ -108,17 +104,11 @@ const NavbarWrapper = styled.div`
 `;
 
 const Wrapper = styled.div<{ themeMode: ThemeMode }>`
-  color: ${ props => props.themeMode === 'dark' ? 'white' : '#19191a' };
+  color: ${ props => props.themeMode === 'dark' ? '#f6f7f8' : 'black' };
 `;
 
 const Profile = styled.div<{ color: string }>`
   margin: 50px 0;
-`;
-
-const Link = styled.a`
-  font-size: 18px;
-  font-weight: 600;
-  color: #941eff;
 `;
 
 const Title = styled.h1`
@@ -132,10 +122,12 @@ const Row = styled.div`
 
 const Contact = styled.h3`
   margin: 0;
+  width: fit-content;
+  font-weight: 600;
 `;
 
 const ShortDescription = styled.div`
-  width: 600px;
+  width: min(600px, 90%);
   margin: auto;
 
   > h3 {

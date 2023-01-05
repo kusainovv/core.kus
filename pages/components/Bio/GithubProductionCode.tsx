@@ -1,12 +1,13 @@
 import styled from "@emotion/styled";
 import React from "react";
+import { ThemeMode } from "../../../core/components/ThemeProvider";
 import { Link, List } from "./Bio.style";
 
 
-export const GithubProductionCode = () => {
+export const GithubProductionCode = (props: { theme: ThemeMode }) => {
     return <List>
     <li>
-        <Link href="https://github.com/kusainovv">My Github</Link>
+        <Link href="https://github.com/kusainovv" theme={props.theme}>My Github</Link>
         <ul>
             <Prompt>
                 <b>Why empty?</b>
@@ -23,7 +24,7 @@ export const GithubProductionCode = () => {
         
         <Prompt>
             Check my own core where you can find code that i wrote for production in
-            <Link href='https://github.com/kusainovv?tab=repositories'> this repository</Link>
+            <Link href='https://github.com/kusainovv?tab=repositories' theme={props.theme}> this repository</Link>
             <i>(of course, i wrote more code)</i>
         </Prompt>
 

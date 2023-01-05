@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { ThemeMode } from "../../../core/components/ThemeProvider";
 
 export const Tab = styled.div`
   margin: 0;
@@ -19,8 +20,10 @@ export const List = styled.ul`
 `;
 
 
-export const Link = styled.a`
+export const Link = styled.a<{ theme: ThemeMode }>`
+  display: block;
+  width: fit-content;
   font-size: 18px;
   font-weight: 600;
-  color: #941eff;
+  color: ${ props => props.theme === 'dark' ? 'rgb(255, 167, 196)' : '#c13f6a' };
 `;
