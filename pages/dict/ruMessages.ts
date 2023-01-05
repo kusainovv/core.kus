@@ -42,12 +42,14 @@ export const ruMessages = {
         aboutMe: "Обо мне",
         hackathons: "Другое программирование и хакатоны",
         otherProgramming: 'Другое программирование (Medium & CodeWars)',
+        githubProdCode: 'GitHub и production код',
         contactWithMe: 'Напишите мне'
     },
 
     common: {
         my: 'Мой',
         in: 'В',
-        thisRepository: 'этот репозиторий'
+        thisRepository: 'этот репозиторий',
+        place: 'место'
     },
 }

@@ -79,7 +79,7 @@ export default function Home() {
           </Tab>  
         </Accordion>
 
-        <Accordion title={dictionary(lang).titles.otherProgramming} theme={theme}>
+        <Accordion title={dictionary(lang).titles.githubProdCode} theme={theme}>
           <Tab>
             <GithubProductionCode theme={theme} lang={lang} />
           </Tab>  

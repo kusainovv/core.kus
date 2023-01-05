@@ -8,7 +8,6 @@ const Lang = styled.p<{ isActive: boolean }>`
 
     color: ${ props => props.isActive ? 'palevioletred' : 'inherit' };
 
-    transition: 0.4s;
     &:hover {
        text-decoration: underline;
     }

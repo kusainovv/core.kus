@@ -41,6 +41,7 @@ export const enMessages = {
         workExp: "My work experience",
         aboutMe: "About me",
         hackathons: 'Other programming and hackathon',
+        githubProdCode: 'GitHub and production code',
         otherProgramming: "Other programming (Medium & CodeWars)",
         contactWithMe: 'Contact with me'
     },
@@ -48,6 +49,7 @@ export const enMessages = {
     common: {
         my: 'My',
         in: 'In',
-        thisRepository: 'this repository'
+        thisRepository: 'this repository',
+        place: 'place'
     }
 }
