@@ -49,6 +49,8 @@ export const enMessages = {
     common: {
         my: 'My',
         in: 'In',
+        worded: 'worked',
+        year: 'year',
         thisRepository: 'this repository',
         place: 'place'
     }

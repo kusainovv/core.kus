@@ -49,6 +49,8 @@ export const ruMessages = {
     common: {
         my: 'Мой',
         in: 'В',
+        worded: 'работал',
+        year: 'года',
         thisRepository: 'этот репозиторий',
         place: 'место'
     },

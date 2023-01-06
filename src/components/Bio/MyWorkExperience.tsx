@@ -17,7 +17,7 @@ export const MyWorkExperience = (props: MyWorkExperienceProps) => {
         </li>
         <li>
             <b>toolympus/dev</b>
-            <WorkExperience>1.2 year</WorkExperience>
+            <WorkExperience>{dictionary(props.lang).common.worded} 1.2 {dictionary(props.lang).common.year}</WorkExperience>
             <Link href='https://www.linkedin.com/in/ратмир-кусаинов-b67b5a257/' theme={props.theme} target={'_blank'} rel='noopener noreferrer'>
                 {dictionary(props.lang).workExp.linkedIn}
             </Link>

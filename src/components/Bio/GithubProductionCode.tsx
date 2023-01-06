@@ -13,7 +13,7 @@ interface GithubProductionCodeProps {
 export const GithubProductionCode = (props: GithubProductionCodeProps) => {
     return <List>
         <li>
-            <Link href="https://github.com/kusainovv" theme={props.theme}>{dictionary(props.lang).common.my}Github</Link>
+            <Link href="https://github.com/kusainovv/core.kus/tree/main/core" theme={props.theme}>{dictionary(props.lang).common.my}Github</Link>
             <ul>
                 <ListItem>
                     <b>{dictionary(props.lang).githubProductionCode.why_empty}</b>
