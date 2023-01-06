@@ -40,7 +40,7 @@ export const enMessages = {
         techSkills: "My tech skills",
         workExp: "My work experience",
         aboutMe: "About me",
-        hackathons: 'Other programming and hackathon',
+        hackathons: 'Hackathons',
         githubProdCode: 'GitHub and production code',
         otherProgramming: "Other programming (Medium & CodeWars)",
         contactWithMe: 'Contact with me'
@@ -51,7 +51,7 @@ export const enMessages = {
         in: 'In',
         worded: 'worked',
         year: 'year',
-        thisRepository: 'this repository',
+        thisRepository: 'in this repository',
         place: 'place'
     }
 }

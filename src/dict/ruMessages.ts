@@ -19,7 +19,7 @@ export const ruMessages = {
         why_empty: 'Почему пустой?',
         why_empty_answer: 'Потому что я скрыл все репозитории',
         whereProdCode: 'Где я могу увидеть production код?',
-        corePath: `Это мной написанное ядро, где вы можете найти код, который я писал для production'a`,
+        corePath: `Мной написанное ядро, где вы можете найти код, который я писал для production'a можно найти в`,
         iWroteMore: 'конечно, я писал больше кода',
         corePrompt: 'посмотрите на папку core, где вы можете увидеть мой написанный код',
         readProdCode: 'вы можете увидеть production код',
@@ -32,7 +32,7 @@ export const ruMessages = {
 
     otherProgramming: {
         article: 'Я часто пишу статьи про программирование и часто читаю другие',
-        codeWars: 'Просто решаю задачи в CodeWars и совершенствую свое алгоритмическое мышление'
+        codeWars: 'Просто решаю задачи в CodeWars и прокачиваю свое алгоритмическое мышление'
     },
 
     titles: {
@@ -40,7 +40,7 @@ export const ruMessages = {
         techSkills: "Мои технические навыки",
         workExp: "Мой опыт работы",
         aboutMe: "Обо мне",
-        hackathons: "Другое программирование и хакатоны",
+        hackathons: "Хакатоны",
         otherProgramming: 'Другое программирование (Medium & CodeWars)',
         githubProdCode: 'GitHub и production код',
         contactWithMe: 'Напишите мне'
@@ -51,7 +51,7 @@ export const ruMessages = {
         in: 'В',
         worded: 'работал',
         year: 'года',
-        thisRepository: 'этот репозиторий',
+        thisRepository: 'этом репозитории',
         place: 'место'
     },
 }

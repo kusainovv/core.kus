@@ -10,7 +10,8 @@ export const MyTechnicalSkills = () => {
       <li>Redux, Mobx, Recoil and other state managers</li>
       <li>SASS, SCSS, LESS, PostCSS</li>
       <li>Understanding and knowing Architectural patterns</li>
-      <li>Webpack</li>
+      <li>CRA, Webpack</li>
+      <li>Jest, Enzyme</li>
       <li>Deploying. Heroku / Vercel / Github / Bitbucket / Gitlab</li>
       <li>Git</li>
       <li>Responsive Design, Cross-Browser Development</li>
