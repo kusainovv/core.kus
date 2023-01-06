@@ -6,11 +6,11 @@
 | --styling  | created/changed the styles  |
 
 
-###  Legend
+# Legend
 
-#### core/
+## core/
  is my own written core
 
-#### src/work_case
+## src/work_case
   just snipper of code from production
   (but i can show more if u want it)
