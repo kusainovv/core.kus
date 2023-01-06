@@ -5,6 +5,7 @@ import { useLanguage } from "../core/components/LanguageProvider";
 import { ThemeMode } from "../core/components/ThemeProvider";
 import { useThemeMode } from "../core/utils/useThemeMode";
 import { AboutMe } from "../src/components/Bio/AboutMe";
+import { Title } from "../src/components/Bio/Bio.style";
 import { ContactWithMe } from "../src/components/Bio/ContactWithMe";
 import { GithubProductionCode } from "../src/components/Bio/GithubProductionCode";
 import { MyTechnicalSkills } from "../src/components/Bio/MyTechnicalSkills";
@@ -13,7 +14,6 @@ import { OtherProgramming } from "../src/components/Bio/OtherProgramming";
 import { Navbar } from "../src/components/Navbar";
 import { OtherProgrammingHackathons } from "../src/components/OtherProgrammingHackathons";
 import { dictionary } from "../src/dict";
-import { Title } from "../src/work_case/AllSchedules.style";
 
 export default function Home() {
   const { theme, switchTheme } = useThemeMode();
