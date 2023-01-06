@@ -1,6 +1,5 @@
 import React from "react";
 import { Schedule } from "./types";
-import { downloadCalendar } from "./AddToCalendar";
 
 import {
   AddToCalendarButton,
@@ -41,7 +40,7 @@ export const ScheduleComponent = (props: {schedule: Schedule, showTime?: boolean
             {title}
         </ShortTitle>
       </Block>
-      <AddToCalendarButton onClick={downloadCalendar([props.schedule])}>
+      <AddToCalendarButton>
         + Add to calendar
       </AddToCalendarButton>
     </ScheduleBlock>
