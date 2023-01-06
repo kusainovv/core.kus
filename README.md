@@ -3,7 +3,6 @@
 | --refactoring  | refactored the code  |
 | --feature  | created a new content for project  |
 | --styling  | created/changed the styles  |
-| --styling  | created/changed the styles  |
 
 
 # Legend
