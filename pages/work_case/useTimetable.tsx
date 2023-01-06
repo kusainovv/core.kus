@@ -42,7 +42,8 @@ export const useTimetable = (allEvents: ScheduleEvent[]): Timetable => {
 
     const getMinMaxDate = (flag: string, eventsToMoments = allEvents.map(
         ({ start_datetime, end_datetime }) => [start_datetime, end_datetime]).flat().map(
-            (event: string) => moment(event))) => {
+            // this any is really ANY, because type depends on moment version
+            (event: string) => moment(event)) as any) => {
         const eventsByDay: moment.Moment[] = eventsToMoments.map((
             { _i }: { _i: string }, key: number) => ({ key, date: moment(_i), }))
             .map(({ date }: moment.Moment) => date);
@@ -54,7 +55,7 @@ export const useTimetable = (allEvents: ScheduleEvent[]): Timetable => {
 
     useEffect(() => {
         const daysFromFirstToLast: false | Moment[] | [Moment[]] = getDatesBetweenDates(minDate, maxDate.toDate());
-        if (daysFromFirstToLast !== false) {
+        if(daysFromFirstToLast !== false) {
             sortByWeek(daysFromFirstToLast);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,7 +66,7 @@ export const useTimetable = (allEvents: ScheduleEvent[]): Timetable => {
         const daysSource = days.filter(shouldKeepDay);
         for (let step = 0; step <= daysSource.length - 1 && daysSource.length - 1 > 0; step += 6) {
             daysFromFirstToLast.push(
-                daysSource.slice(step, step + 6 >= daysSource.length ? daysSource.length : step + 6)
+                daysSource.slice(step, step + 6 >= daysSource.length ? daysSource.length : step + 6) as unknown as Moment
             );
         }
 
@@ -83,15 +84,15 @@ export const useTimetable = (allEvents: ScheduleEvent[]): Timetable => {
             time: [getTime(f[0], f[1]), "-", getTime(t[0], t[1])],
             content: fillField(type),
         });
-
+        
         const afterConsultancyHours = (timeTable: TimeTableT[]) => {
             const lastPossibleRow = timeTable.slice(-1)[0].time;
 
             return {
-                time: [lastPossibleRow[2], "-", "..."],
-                content: fillField(6),
-                isAfterHours: true,
-            } as TimeTableT;
+                    time: [lastPossibleRow[2], "-", "..."],
+                    content: fillField(6),
+                    isAfterHours: true,
+                } as TimeTableT;
         };
 
         const timeTable: TimeTableT[] = [
@@ -100,13 +101,13 @@ export const useTimetable = (allEvents: ScheduleEvent[]): Timetable => {
             makeRow([2, 0], [2, 1], 6),
             makeRow([3, 0], [3, 1], "Break"),
             makeRow([4, 0], [4, 1], 6),
-            makeRow([5, 0], [5, 1], "Consultancy Hours"),
+            // makeRow([5, 0], [5, 1], "Consultancy Hours"),
         ];
 
-        const calculateContent = (week: moment.Moment[], row: TimeTableT): (ScheduleEvent[] | ScheduleEventSynthetic[])[] =>
+        const calculateContent = (week: moment.Moment[], row: TimeTableT): (ScheduleEvent[] | ScheduleEventSynthetic[])[] => 
             row.content.map((content: TimeTableTContent, idx: number) => {
-
-                if (typeof content === "string") {
+                
+                if(typeof content === "string") {
                     return [{ is_synthetic: true, title: content }];
                 }
                 const events = allEvents.filter(({ start_datetime, end_datetime }) =>
@@ -116,8 +117,8 @@ export const useTimetable = (allEvents: ScheduleEvent[]): Timetable => {
                 );
                 return events.length ? events : [];
             });
-
-        const timeTableExtended: TimeTableT[] = [...timeTable, afterConsultancyHours(timeTable)];
+        
+        const timeTableExtended : TimeTableT[] = [...timeTable, afterConsultancyHours(timeTable)];
         return timeTableExtended.map((currentRow: TimeTableT) => ({
             ...currentRow,
             content: calculateContent(week, currentRow),
@@ -127,13 +128,13 @@ export const useTimetable = (allEvents: ScheduleEvent[]): Timetable => {
     const eventsForDay = (day: Moment): ScheduleEvent[] => {
         return allEvents
             .filter(e => formatDayInternal(e.start_datetime) === formatDayInternal(day))
-            .sort((a, b) => formatTime(a.start_datetime) >= formatTime(b.start_datetime) ? 1 : -1)
+            .sort((a,b) => formatTime(a.start_datetime) >= formatTime(b.start_datetime) ? 1 : -1)
     }
 
     const allDays = timetableConfig.daysFromFirstToLast.length && Array.isArray(timetableConfig.daysFromFirstToLast[0]) ?
-        (timetableConfig.daysFromFirstToLast as Moment[][]).reduce((r, x) => [...r, ...x], [])
+        (timetableConfig.daysFromFirstToLast as Moment[][]).reduce((r,x) => [...r, ...x], [])
         : timetableConfig.daysFromFirstToLast as Moment[];
-
+  
     return {
         allDaysByTimetable: timetableConfig.daysFromFirstToLast as [Moment[]],
         allDays,
