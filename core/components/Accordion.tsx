@@ -23,14 +23,23 @@ const AccordionTitleText = styled.p`
   margin: 0;
 `;
 
-export const Accordion : React.FC<{ children: ReactNode, title: string, theme: ThemeMode }> = ({children, title, theme}) => {
+interface AccordionProps {
+  children: ReactNode, 
+  title: string, 
+  theme: ThemeMode
+}
+
+/**
+ * @title the title of accordion
+ */
+export const Accordion : React.FC<AccordionProps> = ({children, title, theme}) => {
     const [isActive, setIsActive] = useState(false);
 
     return (
       <AccordionItem theme={theme}>
-        <AccordionTitle className="accordion-title" onClick={() => setIsActive(!isActive)}>
+        <AccordionTitle onClick={() => setIsActive(!isActive)}>
           <AccordionTitleText>{title}</AccordionTitleText>
-          <div>{isActive ? '-' : '+'}</div>
+          {isActive ? '-' : '+'}
         </AccordionTitle>
         { isActive ? <AccordionContent>{children}</AccordionContent> : null }
       </AccordionItem>

@@ -14,7 +14,7 @@ export const downloadCalendar = (list: Schedule[]) =>
         const ics = require('ics');
         const events = list.map(formatEvent);
 
-        ics.createEvents(events, (_: any, value: string) => {
+        ics.createEvents(events, (_: Event, value: string) => {
             let anchor = document.createElement("a");
             document.body.appendChild(anchor);
 

@@ -17,8 +17,6 @@ export const ThemeButton = (props: ThemeButtonProps) => {
 }
 
 
-
-
 const Wrapper = styled.div<{ theme: ThemeMode, transition: string, wrapperWidth: number }>`
     width: ${ props => props.wrapperWidth }px;
     height: 22px;

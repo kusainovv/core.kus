@@ -8,7 +8,7 @@ const Wrapper = styled.div`
 `;
 
 const Skeleton = styled.div`
-    height: 1601px;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -34,7 +34,7 @@ interface LazyLoadImagesProps {
  * @desktopQuery - define the media query when image must resize for desktop
  * @laptopQuery - define the media query when image must resize for laptop
  * @mobileQuery - define the media query when image must resize for mobile
- */
+*/
 export const LazyLoadImages = (props: LazyLoadImagesProps) => {
 
     const [currentImage, setCurrentImage] = useState(0);

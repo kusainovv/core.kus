@@ -16,14 +16,14 @@ const PopUpContent = styled.div<{ backgroundContent: string }>`
     background-color: ${ props => props.backgroundContent };
 `;
 
-const CloseZone = styled.div<{ backgroundCloseZone: string }>`
+const CloseZone = styled.div<{ backgroundColorCloseZone: string }>`
     z-index: 100;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     position: absolute;
-    background-color: ${ props => props.backgroundCloseZone };
+    background-color: ${ props => props.backgroundColorCloseZone };
 `;
 
 const PopUpVisibility = styled.div<{ isOpened: boolean, transition: string }>`
@@ -32,7 +32,7 @@ const PopUpVisibility = styled.div<{ isOpened: boolean, transition: string }>`
 `;
 
 interface PopupProps {
-    backgroundCloseZone: string,
+    backgroundColorCloseZone: string,
     isOpened: boolean,
     children: ReactNode,
     onCloseHandler: MouseEventHandler<HTMLDivElement>,
@@ -41,14 +41,22 @@ interface PopupProps {
     chooseOnly: boolean,
 }
 
-export const Popup : React.FC<PopupProps> = ({ children, isOpened, backgroundCloseZone, onCloseHandler, transition, backgroundContent, chooseOnly }) => {
+/**
+ * @backgroundCloseZone background for close zone
+ * @isOpened is show pop up
+ * @onCloseHandler function for close zone handler
+ * @transition transition for hidde pop up
+ * @backgroundContent background for pop up content
+ * @chooseOnly disable close zone and close pop up only when chooseOnly was called
+*/
+export const Popup : React.FC<PopupProps> = (props) => {
     return <ZIndex>
-        <PopUpVisibility isOpened={isOpened} transition={transition}>
-            <PopUpContent backgroundContent={backgroundContent}>
-                {children}
+        <PopUpVisibility isOpened={props.isOpened} transition={props.transition}>
+            <PopUpContent backgroundContent={props.backgroundContent}>
+                {props.children}
             </PopUpContent>
 
-            <CloseZone backgroundCloseZone={backgroundCloseZone} onClick={ chooseOnly ? () => {} : onCloseHandler} />
+            <CloseZone backgroundColorCloseZone={props.backgroundColorCloseZone} onClick={ props.chooseOnly ? () => {} : props.onCloseHandler} />
         </PopUpVisibility>
     </ZIndex>
 }

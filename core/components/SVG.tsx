@@ -19,7 +19,6 @@ type MouseEventTriggerVariant = 'enter' | 'leave';
 /**
  * @param svg - svg for prepare, 
  * @syntax const SVG = '<svg></svg>'
- *
  * @param fromColor - initial color of svg (in HEX format) 
  * @param toColor - color in which svg will be repainted
  * @returns svg with changed color
@@ -30,7 +29,6 @@ const ReColorSvg = (svg: string, fromColor: string, toColor: string) => {
 
 
 /**
- * 
  * @param svg - svg for changing color
  * @param hoverColor - change the svg color when mouse on svg
  * @param isOnlyLayout - only layout without Hover effect
