@@ -5,15 +5,19 @@ import { ThemeMode } from "../../../core/components/ThemeProvider";
 import { dictionary } from "../../dict";
 import { Link, List } from "./Bio.style";
 
+interface MyWorkExperienceProps {
+    theme: ThemeMode, 
+    lang: LanguageCode
+}
 
-export const MyWorkExperience = (props: { theme: ThemeMode, lang: LanguageCode }) => {
+export const MyWorkExperience = (props: MyWorkExperienceProps) => {
     return <List>
         <li>
             <b>makeroi</b>
         </li>
         <li>
             <b>toolympus/dev</b>
-            <Date>1.2 year</Date>
+            <WorkExperience>1.2 year</WorkExperience>
             <Link href='https://www.linkedin.com/in/ратмир-кусаинов-b67b5a257/' theme={props.theme} target={'_blank'} rel='noopener noreferrer'>
                 {dictionary(props.lang).workExp.linkedIn}
             </Link>
@@ -21,7 +25,7 @@ export const MyWorkExperience = (props: { theme: ThemeMode, lang: LanguageCode }
     </List>
 }
 
-const Date = styled.p`
+const WorkExperience = styled.p`
     margin: 0;
     font-size: 15px;
 `;

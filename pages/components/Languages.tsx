@@ -23,14 +23,19 @@ interface LanguageProps {
     onChooseHandler: (x: LanguageCode) => void
 }
 
+interface Language {
+    onChooseHandler: (x: LanguageCode) => void, 
+    currentLang: LanguageCode
+}
+
 const Language = ({ langCode, onChooseHandler, currentLang }: LanguageProps) => {
     return <Lang onClick={() => { onChooseHandler(langCode) }} isActive={currentLang === langCode}>
         {langCode}
     </Lang>
 }
 
-const Russian = (props: { onChooseHandler: (x: LanguageCode) => void, currentLang: LanguageCode }) => <Language langCode="en" onChooseHandler={props.onChooseHandler} currentLang={props.currentLang} />
-const English = (props: { onChooseHandler: (x: LanguageCode) => void, currentLang: LanguageCode }) => <Language langCode="ru" onChooseHandler={props.onChooseHandler} currentLang={props.currentLang} />
+const Russian = (props: Language) => <Language langCode="en" onChooseHandler={props.onChooseHandler} currentLang={props.currentLang} />
+const English = (props: Language) => <Language langCode="ru" onChooseHandler={props.onChooseHandler} currentLang={props.currentLang} />
 
 Languages.Russian = Russian;
 Languages.English = English;

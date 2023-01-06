@@ -20,11 +20,16 @@ export const List = styled.ul`
 `;
 
 
-export const Link = styled.a<{ theme: ThemeMode, isBlock: true | false }>`
+export const Link = styled.a<{ theme: ThemeMode }>`
   margin: 0 4px;
-  display: ${ props => props.isBlock };
   width: fit-content;
   font-size: 18px;
   font-weight: 600;
   color: ${ props => props.theme === 'dark' ? 'rgb(255, 167, 196)' : '#c13f6a' };
+`;
+
+
+export const Title = styled.h1`
+  margin: 50px 0 10px 0;
+  text-decoration: underline;
 `;

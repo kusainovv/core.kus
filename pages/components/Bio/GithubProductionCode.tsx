@@ -5,51 +5,53 @@ import { ThemeMode } from "../../../core/components/ThemeProvider";
 import { dictionary } from "../../dict";
 import { Link, List } from "./Bio.style";
 
+interface GithubProductionCodeProps {
+    theme: ThemeMode, 
+    lang: LanguageCode
+}
 
-export const GithubProductionCode = (props: { theme: ThemeMode, lang: LanguageCode }) => {
+export const GithubProductionCode = (props: GithubProductionCodeProps) => {
     return <List>
-    <li>
-        <Link href="https://github.com/kusainovv" theme={props.theme} isBlock={false}>{dictionary(props.lang).common.my}Github</Link>
-        <ul>
-            <Prompt>
-                <b>{dictionary(props.lang).githubProductionCode.why_empty}</b>
-                <br />
-
-                <span>
+        <li>
+            <Link href="https://github.com/kusainovv" theme={props.theme}>{dictionary(props.lang).common.my}Github</Link>
+            <ul>
+                <ListItem>
+                    <b>{dictionary(props.lang).githubProductionCode.why_empty}</b>
+                    <br />
                     {dictionary(props.lang).githubProductionCode.why_empty_answer}
-                </span>
-            </Prompt>
-        </ul>
-    </li>
+                </ListItem>
+            </ul>
+        </li>
 
-    <Prompt>
-      <b> {dictionary(props.lang).githubProductionCode.whereProdCode}</b>
-      <ul>
-        
-        <Prompt>
+    <ListItem>
+      <b>{dictionary(props.lang).githubProductionCode.whereProdCode}</b>
+      
+      <ul>  
+        <ListItem>
             {dictionary(props.lang).githubProductionCode.corePath}
-            <LinkRepository href='https://github.com/kusainovv?tab=repositories' theme={props.theme} isBlock={false}>
+            <LinkRepository href='https://github.com/kusainovv?tab=repositories' theme={props.theme}>
                 {dictionary(props.lang).common.thisRepository}
             </LinkRepository>
             
             <i>({dictionary(props.lang).githubProductionCode.iWroteMore})</i>
-        </Prompt>
+        </ListItem>
 
-        <Prompt>
+        <ListItem>
             <b>{dictionary(props.lang).common.in} core.kus</b>, {dictionary(props.lang).githubProductionCode.corePrompt}.
-        </Prompt>
+        </ListItem>
 
-        <Prompt>
-            <b>{dictionary(props.lang).common.in} pages/work_case</b>, {dictionary(props.lang).githubProductionCode.readProdCode}
-            {dictionary(props.lang).githubProductionCode.onlySnippet}.
-        </Prompt>
-        
+        <ListItem>
+            <b>{dictionary(props.lang).common.in} pages/work_case, </b> 
+            {dictionary(props.lang).githubProductionCode.readProdCode}.
+            <br />
+            ({dictionary(props.lang).githubProductionCode.onlySnippet})
+        </ListItem>
       </ul>
-    </Prompt>
+    </ListItem>
   </List>
 }
 
-const Prompt = styled.li`
+const ListItem = styled.li`
     margin: 10px 0;
 `;
 

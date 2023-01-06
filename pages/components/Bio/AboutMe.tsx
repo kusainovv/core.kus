@@ -5,7 +5,7 @@ import { dictionary } from "../../dict";
 
 export const AboutMe = (props: { lang: LanguageCode }) => {
     return <Description>
-        <>{dictionary(props.lang).aboutMe.description}</>
+        {dictionary(props.lang).aboutMe.description}
         <Languages>
             <li>{dictionary(props.lang).aboutMe.lang.en} - <b>B2</b></li>
             <li>{dictionary(props.lang).aboutMe.lang.ru} - <b>{dictionary(props.lang).aboutMe.lang.ruLevel}</b></li>

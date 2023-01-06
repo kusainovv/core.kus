@@ -5,16 +5,20 @@ import { ThemeMode } from "../../../core/components/ThemeProvider";
 import { dictionary } from "../../dict";
 import { Link, List } from "./Bio.style";
 
+interface OtherProgrammingProps {
+  theme: ThemeMode, 
+  lang: LanguageCode
+}
 
-export const OtherProgramming = (props: { theme: ThemeMode, lang: LanguageCode }) => {
+export const OtherProgramming = (props: OtherProgrammingProps) => {
     return <List>
       <ListItem>
         {dictionary(props.lang).otherProgramming.article}
         <ul>
           <li>
-          <Link href='https://medium.com/@kusainovv' theme={props.theme} isBlock={false}>
-            Medium
-          </Link>
+            <Link href='https://medium.com/@kusainovv' theme={props.theme}>
+              Medium
+            </Link>
           </li>
         </ul>
       </ListItem>
@@ -23,9 +27,9 @@ export const OtherProgramming = (props: { theme: ThemeMode, lang: LanguageCode }
         {dictionary(props.lang).otherProgramming.codeWars}
         <ul>
           <li>
-          <Link href='https://www.codewars.com/users/kusainovv' theme={props.theme} isBlock={false}>
-            CodeWars
-          </Link>
+            <Link href='https://www.codewars.com/users/kusainovv' theme={props.theme}>
+              CodeWars
+            </Link>
           </li>
         </ul>
       </ListItem>

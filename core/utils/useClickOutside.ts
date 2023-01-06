@@ -9,7 +9,7 @@ export const useClickOutside = (trigger: null | RefObject<any> | MutableRefObjec
     useEventListener('click', (event: MouseEvent) => {
         const el = trigger?.current;
         
-        if (!el || el.contains(event.target as Node)) {
+        if (!el || el.contains(event.target)) {
             return;
         }
         
