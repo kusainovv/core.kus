@@ -5,8 +5,6 @@
 /.pnp
 .pnp.js
 
-/pages/work_case
-
 # testing
 /coverage
 
