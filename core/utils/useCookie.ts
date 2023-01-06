@@ -3,7 +3,11 @@ import { prepare } from "./prepare";
 import { useSSR } from "./useSSR"
 
 class CookieCore {
-    public cookie = document.cookie;
+    private cookie: string;
+
+    constructor() {
+        this.cookie = document.cookie;
+    }
 
     public Add(cookie: string) {
         this.cookie = cookie;

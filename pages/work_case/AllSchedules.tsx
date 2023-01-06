@@ -34,7 +34,7 @@ export const AllSchedules = ({ timetable }: Props) => {
       {allDaysByTimetable?.map((currentWeek, id: number) => {
         return (
             <AllSchedulesContainer key={id}>
-              {currentWeek?.map((currentDay: string, indx: number) => {
+              {currentWeek?.map((currentDay, indx: number) => {
                 return (
                 <React.Fragment key = {indx}>
                     {indx % 6 === 0 && <Block />}
