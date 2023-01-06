@@ -4,16 +4,16 @@ import { Accordion } from "../core/components/Accordion";
 import { useLanguage } from "../core/components/LanguageProvider";
 import { ThemeMode } from "../core/components/ThemeProvider";
 import { useThemeMode } from "../core/utils/useThemeMode";
-import { AboutMe } from "./components/Bio/AboutMe";
-import { Title } from "./components/Bio/Bio.style";
-import { ContactWithMe } from "./components/Bio/ContactWithMe";
-import { GithubProductionCode } from "./components/Bio/GithubProductionCode";
-import { MyTechnicalSkills } from "./components/Bio/MyTechnicalSkills";
-import { MyWorkExperience } from "./components/Bio/MyWorkExperience";
-import { OtherProgramming } from "./components/Bio/OtherProgramming";
-import { Navbar } from "./components/Navbar";
-import { OtherProgrammingHackathons } from "./components/OtherProgrammingHackathons";
-import { dictionary } from "./dict";
+import { AboutMe } from "../src/components/Bio/AboutMe";
+import { ContactWithMe } from "../src/components/Bio/ContactWithMe";
+import { GithubProductionCode } from "../src/components/Bio/GithubProductionCode";
+import { MyTechnicalSkills } from "../src/components/Bio/MyTechnicalSkills";
+import { MyWorkExperience } from "../src/components/Bio/MyWorkExperience";
+import { OtherProgramming } from "../src/components/Bio/OtherProgramming";
+import { Navbar } from "../src/components/Navbar";
+import { OtherProgrammingHackathons } from "../src/components/OtherProgrammingHackathons";
+import { dictionary } from "../src/dict";
+import { Title } from "../src/work_case/AllSchedules.style";
 
 export default function Home() {
   const { theme, switchTheme } = useThemeMode();
