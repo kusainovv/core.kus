@@ -11,5 +11,5 @@
  is my own written core
 
 ## src/work_case
-  just snipper of code from production
+  just snippet of code from production
   (but i can show more if u want it)
