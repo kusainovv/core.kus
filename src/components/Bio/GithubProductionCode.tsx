@@ -41,7 +41,7 @@ export const GithubProductionCode = (props: GithubProductionCodeProps) => {
         </ListItem>
 
         <ListItem>
-            <b>{dictionary(props.lang).common.in} pages/work_case, </b> 
+            <b>{dictionary(props.lang).common.in} src/work_case, </b> 
             {dictionary(props.lang).githubProductionCode.readProdCode}.
             <br />
             ({dictionary(props.lang).githubProductionCode.onlySnippet})
