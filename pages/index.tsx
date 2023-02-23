@@ -78,9 +78,6 @@ export default function Home() {
   </Wrapper>
 }
 
-
-
-
 const Wrapper = styled.div<{ themeMode: ThemeMode }>`
   color: ${ props => props.themeMode === 'dark' ? '#f6f7f8' : 'black' };
 `;

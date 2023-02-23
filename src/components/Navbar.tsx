@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import Link from "next/link";
 import React from "react";
 import { LanguageCode } from "../../core/components/LanguageProvider";
 import { ThemeButton } from "../../core/components/ThemeButton";
@@ -20,11 +21,17 @@ export const Navbar = ({ switchTheme, theme, onChooseHandler, currentLang }: Nav
       </Row>
       
       <ThemeButton transition="0.3s" wrapperWidth={50} sliderWidth={22} switchHandler={switchTheme} theme={theme} />
+      
+      <PlaygroundLink href={'/playground'}>Go to playground</PlaygroundLink>
     </NavbarWrapper>
 }
 
 
 
+const PlaygroundLink = styled(Link)`
+  text-decoration: none;
+  font-size: 24px;
+`;
 
 const Row = styled.div`
   display: flex;
