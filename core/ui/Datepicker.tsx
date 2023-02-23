@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
-import { ChangeEvent, ChangeEventHandler, useState } from "react";
+import { ChangeEvent, ChangeEventHandler, createRef, useEffect, useRef, useState } from "react";
+import { debounce } from "../utils/debounce";
 
 const Title = styled.p`
   margin: 0;
@@ -211,6 +212,7 @@ export const Datepicker = (props: DatePickerProps) => {
   const [currentTab, setCurrentTab] = useState(0);
   const [currentDay, setCurrentDay] = useState(new Date().getDate());
   const [isPickSchedule, setPickSchedule] = useState(false);
+  const [isFocus, setFocus] = useState(false);
 
   const DatePickerFieldHandWriteHandler = (
     e: ChangeEvent<HTMLInputElement>
@@ -219,7 +221,6 @@ export const Datepicker = (props: DatePickerProps) => {
       ? `${e.target.value.replaceAll(/\D/g, "")}`
       : ""; // get only numbers
     const pointsCounter = e.target.value.length - onlyDate.length;
-
     try {
       // check does user write a point e.g 20.05 is correct 2005 isn't correct
       if (
@@ -309,27 +310,46 @@ export const Datepicker = (props: DatePickerProps) => {
       }
     } catch {
       setCurrentTab(0);
+      setDatepickerValue('');
       setCurrentDay(new Date().getDate());
     }
   };
+  const DatePickerFieldFocus = useRef<HTMLInputElement | null>(null);
+  
+  useEffect(() => {
+    if (isShowPopup) {
+        DatePickerFieldFocus.current?.focus();
+    } else {
+        DatePickerFieldFocus.current?.blur();
+    }
+  }, [isFocus, isShowPopup])
+  
 
   return (
     <>
       <DatePickerField
+        ref={DatePickerFieldFocus}
         type="text"
         aria-label="Выбрать время"
         role={"search"}
         placeholder="дд.мм.ггггг"
+        onBlur={(e) => {
+            if (isShowPopup) {
+                e.target.focus();
+            } else {
+                e.target.blur();
+            }
+        }}
         onClick={() => {
-          setPopup(!isShowPopup);
+            setFocus(true);
+          setPopup(true);
         }}
         value={isPickSchedule ? datepickerValue : undefined}
         onChange={
           (e) => {
             isPickSchedule && setPickSchedule(false);
-            DatePickerFieldHandWriteHandler(e);
+            debounce(() => DatePickerFieldHandWriteHandler(e), 500)();
           }
-          // TODO: ты говорил что уже реализовал debounce, поэтому пж оберни DatePickerFieldHandWriteHandler в debounce delay-500ms
         }
       ></DatePickerField>
 
@@ -337,6 +357,7 @@ export const Datepicker = (props: DatePickerProps) => {
         <>
           <PopUpCloseZone
             onClick={() => {
+            setFocus(false);
               setPopup(false);
             }}
           />
