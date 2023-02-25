@@ -45,140 +45,6 @@ const ScheduleNavigation = styled.div`
   justify-content: space-around;
 `;
 
-
-
-
-
-interface ScheduleTableSchemaDay {
-  day: number;
-  month: string;
-  monthOrder: number;
-  year: number;
-}
-interface DatePickerProps {
-  maxYear: number;
-}
-type ScheduleDay = {
-  day: number;
-  month: string;
-  monthOrder: string;
-  year: string;
-};
-type ScheduleTableSchema = {
-  month: string;
-  year: number;
-  scheduleTable: ScheduleDay[];
-};
-
-const months = [
-  "январь",
-  "февраль",
-  "март",
-  "апрель",
-  "май",
-  "июнь",
-  "июль",
-  "август",
-  "сентябрь",
-  "октябрь",
-  "ноябрь",
-  "декабрь",
-];
-
-const formatSingleDate = (date: string | number) => {
-  // get[month|date]() returns date without first zero e.g. -> new Date(23-02-2023).getMonth() = 2
-  return `${date}`.length === 1 ? `0${date}` : `${date}`;
-};
-const getMonthName = (date: Date) => months[date.getMonth()];
-const getMonthForReference = (month: Date) => month.getMonth();
-const getMonthForUI = (month: Date) => month.getMonth() + 1;
-
-const getTableSchema = (schema: ScheduleTableSchema) => ({
-  month: schema.month,
-  year: schema.year,
-  scheduleTable: schema.scheduleTable,
-});
-
-const getTableDaySchema = (schema: ScheduleTableSchemaDay) => ({
-  month: schema.month,
-  year: schema.year,
-  day: schema.day,
-  monthOrder: schema.monthOrder,
-});
-
-function getDaysInMonth(year: number) {
-  const startDateMonth = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth(),
-    1
-  );
-
-  const nd = new Date();
-  const scheduleTable = new Map();
-
-  const endScheduleDate = new Date(
-    `${year}-${nd.getMonth() + 1}-${new Date(
-      year,
-      getMonthForUI(startDateMonth),
-      0
-    ).getDate()}`
-  );
-
-  const lastMonthDay = new Date(
-    startDateMonth.getFullYear(),
-    getMonthForUI(startDateMonth),
-    0
-  );
-
-  for (
-    let monthIndex = 0;
-    startDateMonth.getTime() !== endScheduleDate.getTime();
-
-  ) {
-    const uniqScheduleKey = `${monthIndex}_${
-      months[getMonthForReference(startDateMonth)]
-    }`;
-
-    const newScheduleDay = getTableDaySchema({
-      day: startDateMonth.getDate(),
-      month: getMonthName(startDateMonth),
-      monthOrder: getMonthForUI(startDateMonth),
-      year: startDateMonth.getFullYear(),
-    });
-
-    if (scheduleTable.get(uniqScheduleKey)) {
-      scheduleTable.set(
-        uniqScheduleKey,
-        getTableSchema({
-          month: getMonthName(startDateMonth),
-          year: startDateMonth.getFullYear(),
-          scheduleTable: [
-            ...Array.from(scheduleTable.get(uniqScheduleKey).scheduleTable),
-            newScheduleDay,
-          ] as ScheduleDay[],
-        })
-      );
-    } else {
-      scheduleTable.set(uniqScheduleKey, {
-        scheduleTable: [newScheduleDay],
-      });
-    }
-
-    if (
-      `${months[getMonthForUI(lastMonthDay)] + lastMonthDay.getDate()}` ===
-      `${months[getMonthForUI(startDateMonth)] + startDateMonth.getDate()}`
-    ) {
-      ++monthIndex;
-    }
-
-    startDateMonth.setDate(startDateMonth.getDate() + 1);
-  }
-
-  return {
-    scheduleTable: Array.from(scheduleTable),
-  };
-}
-
 const CreateNavigationArrow = ({
   direction,
   switchNavigation,
@@ -205,8 +71,223 @@ const CreateNavigationArrow = ({
   );
 };
 
-export const Datepicker = (props: DatePickerProps) => {
-  const { scheduleTable } = getDaysInMonth(props.maxYear);
+
+const getTableSchema = (schema: any) => ({
+  month: schema.month,
+  year: schema.year,
+  scheduleTable: schema.scheduleTable,
+});
+
+const getTableDaySchema = (schema: any) => ({
+  month: schema.month,
+  year: schema.year,
+  day: schema.day,
+  monthOrder: schema.monthOrder,
+});
+// const DatePickerFieldHandWriteHandler = (
+//   e: ChangeEvent<HTMLInputElement>
+// ) => {
+//   const onlyDate = e.target.value.length
+//     ? `${e.target.value.replaceAll(/\D/g, "")}`
+//     : ""; // get only numbers
+//   const pointsCounter = e.target.value.length - onlyDate.length;
+//   try {
+//     // check does user write a point e.g 20.05 is correct 2005 isn't correct
+//     if (
+//       (/^\d+$/g.test(e.target.value) && e.target.value.length === 3) ||
+//       (/^\d+$/g.test(e.target.value) && e.target.value.length === 4) ||
+//       (/^\d+$/g.test(e.target.value) && e.target.value.length === 8)
+//     ) {
+//       throw new Error();
+//     }
+
+//     const getScheduleByOptions = (options: {
+//       isDay?: boolean;
+//       isMonth?: boolean;
+//       isYear?: boolean;
+//     }) => {
+//       const day = +`${onlyDate.slice(0, 2)}`;
+//       const month = +`${onlyDate.slice(2, 4)}`;
+//       const year = +`${onlyDate.slice(4, 8)}`;
+//       return new Promise<{ idx: number; scheduleDay: ScheduleDay }>(
+//         (resolve) => {
+//           const hasUserDate = scheduleTable.findIndex(
+//             (scheduleTableItem, idx) => {
+//               scheduleTableItem[1].scheduleTable.filter(
+//                 (scheduleDay: ScheduleDay) => {
+//                   if (
+//                     (options.isDay && scheduleDay.day === day) ||
+//                     (options.isMonth &&
+//                       scheduleDay.day === day &&
+//                       getMonthName(
+//                         new Date(new Date().setMonth(month - 1))
+//                       ) === scheduleDay.month) ||
+//                     (scheduleDay.day === day &&
+//                       getMonthName(
+//                         new Date(new Date().setMonth(month - 1))
+//                       ) === scheduleDay.month &&
+//                       year === +scheduleDay.year)
+//                   ) {
+//                     resolve({ scheduleDay, idx });
+//                   }
+//                 }
+//               );
+//             }
+//           );
+
+//           if (hasUserDate === -1) {
+//             throw new Error();
+//           }
+//         }
+//       );
+//     };
+
+//     if (e.target.value.length === 2 && pointsCounter === 0) {
+//       getScheduleByOptions({ isDay: true }).then((r) => {
+//         setCurrentDay(r.scheduleDay.day);
+//         setCurrentTab(r.idx);
+//         setDatepickerValue(`${e.target.value}${datepickerValue.slice(2)}`);
+//       });
+//     } else if (
+//       e.target.value.length === 5 &&
+//       +onlyDate.slice(2, 4) < 13 &&
+//       pointsCounter === 1
+//     ) {
+//       getScheduleByOptions({ isMonth: true }).then((r) => {
+//         setCurrentDay(r.scheduleDay.day);
+//         setCurrentTab(r.idx);
+//         setDatepickerValue(
+//           `${datepickerValue.slice(0, 2)}.${e.target.value.slice(
+//             3,
+//             5
+//           )}.${datepickerValue.slice(6, 10)}`
+//         );
+//       });
+//     } else if (
+//       e.target.value.length === 10 &&
+//       +onlyDate.slice(4, 8) < props.maxYear &&
+//       pointsCounter === 2
+//     ) {
+//       getScheduleByOptions({ isYear: true }).then((r) => {
+//         setCurrentDay(r.scheduleDay.day);
+//         setCurrentTab(r.idx);
+//         setDatepickerValue(
+//           `${datepickerValue.slice(0, 5)}.${e.target.value.slice(6, 10)}`
+//         );
+//       });
+//     } else if (onlyDate.length === 0) {
+//       throw new Error();
+//     }
+//   } catch {
+//     setCurrentTab(0);
+//     setDatepickerValue('');
+//     setCurrentDay(new Date().getDate());
+//   }
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const months = [
+  "январь",
+  "февраль",
+  "март",
+  "апрель",
+  "май",
+  "июнь",
+  "июль",
+  "август",
+  "сентябрь",
+  "октябрь",
+  "ноябрь",
+  "декабрь",
+];
+
+
+function useDaysInMonth(year: number) {
+  const [visibleItems, setVisibleItems] = useState(12);
+  const [lastYears, setLastYears] = useState([1800]);
+  
+  const startDateMonth = new Date(
+    1800,
+    new Date().getMonth(),
+    1
+  );
+
+  const oneFullYear = Array.from({ length: visibleItems }).map(()=>({ month: '', schedule: [], year: '' }));
+
+  const visibleYears = 0;
+
+  for (let currentMonthOrder = 0, currentMonth = 0; currentMonthOrder < visibleItems; ++currentMonthOrder, ++currentMonth) {
+    const year = lastYears[Math.floor(currentMonthOrder / 12)];
+
+    if (currentMonth % 12 === 0 && currentMonth !== 0) {
+      currentMonth = 0;
+    }
+    
+    if (oneFullYear[currentMonthOrder].month === '') {
+      oneFullYear[currentMonthOrder].month = months[currentMonth];
+      oneFullYear[currentMonthOrder].year = `${year}`;
+    }
+
+    for (
+      let currentDay = 1;
+      currentDay < new Date(year, currentMonth, 0, 23, 59, 59).getDate();
+      ++currentDay
+    ) {
+      if (new Date(year, currentMonth, 0).getDate() > oneFullYear[currentMonthOrder].schedule.length) {
+        const nextDay = new Date(year, currentMonth, currentDay);
+        oneFullYear[currentMonthOrder].schedule.push(nextDay);
+      }
+    }
+
+  }
+
+  return {
+    scheduleTable: oneFullYear,
+    nextYear: () => {
+      setVisibleItems(visibleItems + 12);
+      setLastYears(prev => [ ...prev, Number(prev.at(-1)) + 1 ])
+    }
+  }
+}
+
+export const Datepicker = (props: any) => {
   const [datepickerValue, setDatepickerValue] = useState<string>("");
   const [isShowPopup, setPopup] = useState(false);
   const [currentTab, setCurrentTab] = useState(0);
@@ -214,146 +295,22 @@ export const Datepicker = (props: DatePickerProps) => {
   const [isPickSchedule, setPickSchedule] = useState(false);
   const [isFocus, setFocus] = useState(false);
 
-  const DatePickerFieldHandWriteHandler = (
-    e: ChangeEvent<HTMLInputElement>
-  ) => {
-    const onlyDate = e.target.value.length
-      ? `${e.target.value.replaceAll(/\D/g, "")}`
-      : ""; // get only numbers
-    const pointsCounter = e.target.value.length - onlyDate.length;
-    try {
-      // check does user write a point e.g 20.05 is correct 2005 isn't correct
-      if (
-        (/^\d+$/g.test(e.target.value) && e.target.value.length === 3) ||
-        (/^\d+$/g.test(e.target.value) && e.target.value.length === 4) ||
-        (/^\d+$/g.test(e.target.value) && e.target.value.length === 8)
-      ) {
-        throw new Error();
-      }
-
-      const getScheduleByOptions = (options: {
-        isDay?: boolean;
-        isMonth?: boolean;
-        isYear?: boolean;
-      }) => {
-        const day = +`${onlyDate.slice(0, 2)}`;
-        const month = +`${onlyDate.slice(2, 4)}`;
-        const year = +`${onlyDate.slice(4, 8)}`;
-        return new Promise<{ idx: number; scheduleDay: ScheduleDay }>(
-          (resolve) => {
-            const hasUserDate = scheduleTable.findIndex(
-              (scheduleTableItem, idx) => {
-                scheduleTableItem[1].scheduleTable.filter(
-                  (scheduleDay: ScheduleDay) => {
-                    if (
-                      (options.isDay && scheduleDay.day === day) ||
-                      (options.isMonth &&
-                        scheduleDay.day === day &&
-                        getMonthName(
-                          new Date(new Date().setMonth(month - 1))
-                        ) === scheduleDay.month) ||
-                      (scheduleDay.day === day &&
-                        getMonthName(
-                          new Date(new Date().setMonth(month - 1))
-                        ) === scheduleDay.month &&
-                        year === +scheduleDay.year)
-                    ) {
-                      resolve({ scheduleDay, idx });
-                    }
-                  }
-                );
-              }
-            );
-
-            if (hasUserDate === -1) {
-              throw new Error();
-            }
-          }
-        );
-      };
-
-      if (e.target.value.length === 2 && pointsCounter === 0) {
-        getScheduleByOptions({ isDay: true }).then((r) => {
-          setCurrentDay(r.scheduleDay.day);
-          setCurrentTab(r.idx);
-          setDatepickerValue(`${e.target.value}${datepickerValue.slice(2)}`);
-        });
-      } else if (
-        e.target.value.length === 5 &&
-        +onlyDate.slice(2, 4) < 13 &&
-        pointsCounter === 1
-      ) {
-        getScheduleByOptions({ isMonth: true }).then((r) => {
-          setCurrentDay(r.scheduleDay.day);
-          setCurrentTab(r.idx);
-          setDatepickerValue(
-            `${datepickerValue.slice(0, 2)}.${e.target.value.slice(
-              3,
-              5
-            )}.${datepickerValue.slice(6, 10)}`
-          );
-        });
-      } else if (
-        e.target.value.length === 10 &&
-        +onlyDate.slice(4, 8) < props.maxYear &&
-        pointsCounter === 2
-      ) {
-        getScheduleByOptions({ isYear: true }).then((r) => {
-          setCurrentDay(r.scheduleDay.day);
-          setCurrentTab(r.idx);
-          setDatepickerValue(
-            `${datepickerValue.slice(0, 5)}.${e.target.value.slice(6, 10)}`
-          );
-        });
-      } else if (onlyDate.length === 0) {
-        throw new Error();
-      }
-    } catch {
-      setCurrentTab(0);
-      setDatepickerValue('');
-      setCurrentDay(new Date().getDate());
-    }
-  };
-  const DatePickerFieldFocus = useRef<HTMLInputElement | null>(null);
-  
-  useEffect(() => {
-    if (isShowPopup) {
-        DatePickerFieldFocus.current?.focus();
-    } else {
-        DatePickerFieldFocus.current?.blur();
-    }
-  }, [isFocus, isShowPopup])
-  
-
+  const { scheduleTable, nextYear } = useDaysInMonth(3000);
+  console.warn(scheduleTable)
   return (
     <>
       <DatePickerField
-        ref={DatePickerFieldFocus}
         type="text"
         aria-label="Выбрать время"
         role={"search"}
         placeholder="дд.мм.ггггг"
-        onBlur={(e) => {
-            if (isShowPopup) {
-                e.target.focus();
-            } else {
-                e.target.blur();
-            }
-        }}
-        onClick={() => {
-            setFocus(true);
-          setPopup(true);
-        }}
-        value={isPickSchedule ? datepickerValue : undefined}
-        onChange={
-          (e) => {
-            isPickSchedule && setPickSchedule(false);
-            debounce(() => DatePickerFieldHandWriteHandler(e), 500)();
-          }
-        }
       ></DatePickerField>
 
-      {isShowPopup && (
+      <span onClick={nextYear}>
+        next year
+      </span>
+
+      {/* {isShowPopup && (
         <>
           <PopUpCloseZone
             onClick={() => {
@@ -421,7 +378,7 @@ export const Datepicker = (props: DatePickerProps) => {
             </Schedule>
           </Content>
         </>
-      )}
+      )} */}
     </>
   );
 };
