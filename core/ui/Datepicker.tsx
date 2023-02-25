@@ -239,50 +239,79 @@ const months = [
 ];
 
 
-function useDaysInMonth(year: number) {
-  const [visibleItems, setVisibleItems] = useState(12);
-  const [lastYears, setLastYears] = useState([1800]);
-  
-  const startDateMonth = new Date(
-    1800,
-    new Date().getMonth(),
-    1
-  );
+function useDatepicker() {
+  const [lastYear, setLastYear] = useState(1800);
 
-  const oneFullYear = Array.from({ length: visibleItems }).map(()=>({ month: '', schedule: [], year: '' }));
+  let oneFullYear = Array.from({ length: Math.abs(12) }).map(() => ({ month: '', schedule: [], year: '' }));
 
-  const visibleYears = 0;
-
-  for (let currentMonthOrder = 0, currentMonth = 0; currentMonthOrder < visibleItems; ++currentMonthOrder, ++currentMonth) {
-    const year = lastYears[Math.floor(currentMonthOrder / 12)];
-
+  for (let currentMonthOrder = 0, currentMonth = 0; currentMonthOrder < 12; ++currentMonthOrder, ++currentMonth) {
     if (currentMonth % 12 === 0 && currentMonth !== 0) {
+      setLastYear(new Date(lastYear, currentMonth, 0, 0, 0, 0).getFullYear());
       currentMonth = 0;
     }
-    
+
     if (oneFullYear[currentMonthOrder].month === '') {
       oneFullYear[currentMonthOrder].month = months[currentMonth];
-      oneFullYear[currentMonthOrder].year = `${year}`;
+      oneFullYear[currentMonthOrder].year = `${lastYear}`;
     }
 
     for (
       let currentDay = 1;
-      currentDay < new Date(year, currentMonth, 0, 23, 59, 59).getDate();
+      currentDay < new Date(lastYear, currentMonth, 0, 23, 59, 59).getDate();
       ++currentDay
     ) {
-      if (new Date(year, currentMonth, 0).getDate() > oneFullYear[currentMonthOrder].schedule.length) {
-        const nextDay = new Date(year, currentMonth, currentDay);
+      if (new Date(lastYear, currentMonth, 0).getDate() > oneFullYear[currentMonthOrder].schedule.length) {
+        const nextDay = new Date(lastYear, currentMonth, currentDay);
         oneFullYear[currentMonthOrder].schedule.push(nextDay);
       }
     }
+  }
 
+
+  const findCloseDate = (date: string) => {
+    oneFullYear = Array.from({ length: Math.abs(12) }).map(() => ({ month: '', schedule: [], year: '' }));
+    const day = +date.slice(0, 2);
+    const month = +date.slice(3, 5);
+    const year = +date.slice(6, 10);
+    if (day > 31 || month > 12 || year > 3000 || year < 1800) {
+      return null;
+    }
+
+    for (let currentMonthOrder = 0, currentMonth = 0; currentMonthOrder < 12; ++currentMonthOrder, ++currentMonth) {
+      if (currentMonth % 12 === 0 && currentMonth !== 0) {
+        setLastYear(new Date(year, currentMonth, 0, 0, 0, 0).getFullYear());
+        currentMonth = 0;
+      }
+
+      if (oneFullYear[currentMonthOrder].month === '') {
+        oneFullYear[currentMonthOrder].month = months[currentMonth];
+        oneFullYear[currentMonthOrder].year = `${year}`;
+      }
+
+      for (
+        let currentDay = 1;
+        currentDay < new Date(year, currentMonth, 0, 23, 59, 59).getDate();
+        ++currentDay
+      ) {
+        if (new Date(year, currentMonth, 0).getDate() > oneFullYear[currentMonthOrder].schedule.length) {
+          const nextDay = new Date(year, currentMonth, currentDay);
+          oneFullYear[currentMonthOrder].schedule.push(nextDay);
+        }
+      }
+    }
+
+    console.warn(oneFullYear)
   }
 
   return {
     scheduleTable: oneFullYear,
+    isDisabledNext: false,
     nextYear: () => {
-      setVisibleItems(visibleItems + 12);
-      setLastYears(prev => [ ...prev, Number(prev.at(-1)) + 1 ])
+      setLastYear(prev => prev + 1 === 3000 ? 3000 : prev + 1);
+    },
+    findCloseDate,
+    previousYear: () => {
+      setLastYear(prev => prev - 1 === 1800 ? 1800 : prev - 1);
     }
   }
 }
@@ -295,19 +324,24 @@ export const Datepicker = (props: any) => {
   const [isPickSchedule, setPickSchedule] = useState(false);
   const [isFocus, setFocus] = useState(false);
 
-  const { scheduleTable, nextYear } = useDaysInMonth(3000);
-  console.warn(scheduleTable)
-  return (
+  const { scheduleTable, findCloseDate, isDisabledNext, nextYear, previousYear } = useDatepicker();
+  console.warn(scheduleTable);
+  return (  
     <>
       <DatePickerField
         type="text"
         aria-label="Выбрать время"
         role={"search"}
+        onChange={(e) => findCloseDate(e.target.value)}
         placeholder="дд.мм.ггггг"
       ></DatePickerField>
 
-      <span onClick={nextYear}>
+      <span onClick={isDisabledNext ? () => null : nextYear}>
         next year
+      </span>
+      <br />
+      <span onClick={previousYear}>
+        previous year
       </span>
 
       {/* {isShowPopup && (
