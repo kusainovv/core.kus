@@ -37,6 +37,7 @@ const Content = styled.div`
 
 const DatePickerField = styled.input`
   position: relative;
+  z-index: 11;
 `;
 
 const ScheduleNavigation = styled.div`
@@ -238,9 +239,22 @@ const months = [
   "декабрь",
 ];
 
+const days = [
+  "пн",
+  "вт",
+  "ср",
+  "чт",
+  "пт",
+  "сб",
+  "вс",
+];
+
+const zeroPrefix = (date: number) => `${date}`.length === 1 ? `0${date}` : `${date}`;
 
 function useDatepicker() {
+  const [datepickerValue, setDatepickerValue] = useState<string>(`${zeroPrefix(new Date().getDate())}.${zeroPrefix(new Date().getMonth())}.${new Date().getFullYear()}`);
   const [lastYear, setLastYear] = useState(new Date().getFullYear());
+  const [currentDay, setCurrentDay] = useState(new Date().getDate());
   const [currentTab, setCurrentTab] = useState(0);
 
   const isDisabledPrevious = lastYear === 1800;
@@ -254,10 +268,9 @@ function useDatepicker() {
       oneFullYear[currentMonthOrder].month = months[currentMonth];
       oneFullYear[currentMonthOrder].year = `${lastYear}`;
     }
-
     for (
       let currentDay = 1;
-      currentDay < new Date(lastYear, currentMonth, 0, 23, 59, 59).getDate();
+      currentDay <= new Date(lastYear, currentMonth + 1, 0, 23, 59, 59).getDate();
       ++currentDay
     ) {
       if (new Date(lastYear, currentMonth, 0).getDate() > oneFullYear[currentMonthOrder].schedule.length) {
@@ -267,13 +280,17 @@ function useDatepicker() {
     }
   }
 
-
   const findCloseDate = (date: string) => {
+    setDatepickerValue(date);
+    
     oneFullYear = getYearSchema();
     const day = +date.slice(0, 2);
     const month = +date.slice(3, 5);
     const year = +date.slice(6, 10);
-    if (day > 31 || month > 12 || year > 3000 || year < 1800) {
+    if (
+      day > 31 || month > 12 
+      || year > 3000 || year < 1800 
+      || (date.replace(/\D/g,'').length !== date.length - 2) && !date.replace(/\D/g,'').length) {
       return null;
     }
 
@@ -289,12 +306,12 @@ function useDatepicker() {
       }
 
       if (currentMonth === 10) {
-        setCurrentTab(month);
+        setCurrentTab(month - 1);
       }
 
       for (
         let currentDay = 1;
-        currentDay < new Date(year, currentMonth, 0, 23, 59, 59).getDate();
+        currentDay < new Date(year, currentMonth + 1, 0, 23, 59, 59).getDate();
         ++currentDay
       ) {
         if (new Date(year, currentMonth, 0).getDate() > oneFullYear[currentMonthOrder].schedule.length) {
@@ -303,6 +320,8 @@ function useDatepicker() {
         }
       }
     }
+
+    setCurrentDay(day);
   }
 
   return {
@@ -310,6 +329,12 @@ function useDatepicker() {
     currentTab,
 
     findCloseDate,
+    datepickerValue,
+    currentDay,
+
+    changeCurrentDay: (day: number) => {
+      setCurrentDay(day);
+    },
 
     previousMonth: () => {
       if (isDisabledPrevious) {
@@ -322,6 +347,10 @@ function useDatepicker() {
       } else {
         setCurrentTab(Math.abs(currentTab) - 1);
       }
+    },
+
+    updateDatepickerValue: (datepickerValue: string) => {
+      setDatepickerValue(datepickerValue);
     },
 
     nextMonth: () => {
@@ -340,12 +369,10 @@ function useDatepicker() {
 }
 
 export const Datepicker = () => {
-  const [datepickerValue, setDatepickerValue] = useState<string>("");
   const [isShowPopup, setPopup] = useState(false);
-  const [currentDay, setCurrentDay] = useState(new Date().getDate());
 
-  const { scheduleTable, findCloseDate, currentTab, previousMonth, nextMonth } = useDatepicker();
-  
+  const { scheduleTable, datepickerValue, findCloseDate, currentDay, changeCurrentDay, currentTab, updateDatepickerValue, previousMonth, nextMonth } = useDatepicker();
+  console.warn(datepickerValue);
   const datePickerField = useRef<HTMLInputElement | null>(null);
 
   return (  
@@ -353,10 +380,16 @@ export const Datepicker = () => {
       <DatePickerField
         ref={datePickerField}
         type="text"
+        value={datepickerValue}
         aria-label="Выбрать время"
         role={"search"}
-        onChange={(e) => findCloseDate(e.target.value)}
-        onClick={() => setPopup(true)}
+        onChange={(e) => {
+          findCloseDate(e.target.value);
+        }}
+        onClick={(e) => {
+          setPopup(true);
+          datePickerField.current?.focus();
+        }}
         placeholder="дд.мм.гггг"
       ></DatePickerField>
       
@@ -365,6 +398,7 @@ export const Datepicker = () => {
           <PopUpCloseZone
             onClick={() => {
               datePickerField.current?.blur();
+              setPopup(false);
             }}
           />
 
@@ -372,7 +406,7 @@ export const Datepicker = () => {
             datePickerField.current?.focus();
           }}>
             <Title>
-              {scheduleTable[currentTab === 0 ? 0 : currentTab - 1].month +
+              {scheduleTable[currentTab].month +
                 ", " +
                 scheduleTable[currentTab].year}
             </Title>
@@ -395,8 +429,14 @@ export const Datepicker = () => {
                   return (
                     <ScheduleItem
                       key={key}
-                      isCurrentScheduleItem={day.day === currentDay}>
+                      onClick={() => {
+                        changeCurrentDay(day.getDate());
+                        updateDatepickerValue(`${zeroPrefix(day.getDate())}.${zeroPrefix(day.getMonth() + 1)}.${day.getFullYear()}`)
+                      }}
+                      isCurrentScheduleItem={day.getDate() === currentDay}>
                       {day.getDate()}
+                      <br />
+                      {days[day.getDay()]}
                     </ScheduleItem>
                   );
                 }
