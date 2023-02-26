@@ -2,20 +2,51 @@ import styled from "@emotion/styled";
 import { ChangeEvent, ChangeEventHandler, createRef, useEffect, useRef, useState } from "react";
 import { debounce } from "../utils/debounce";
 
-const Title = styled.p`
+const Title = styled.div`
   margin: 0;
   text-align: center;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.15);
 `;
 
-const Schedule = styled.div`
+const MonthYear = styled.p`
+  margin: 0;
+`;
+
+const ScheduleItems = styled.div`
   display: grid;
   grid-template-columns: repeat(7, min-content);
   gap: 10px;
 `;
 
+const ScheduleWrapper = styled.div`
+  padding-top: 10px;
+`;
+
+const Schedule = styled.div`
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0 10px;
+  width: 100%;
+  text-align: center;
+
+  > span {
+    color: rgba(0,0,0,0.5);
+  }
+`;
+
 const ScheduleItem = styled.span<{ isCurrentScheduleItem: boolean }>`
-  font-weight: ${(props) => (props.isCurrentScheduleItem ? "700" : "200")};
+  text-align: center;
+  border: 1px solid white;
+  padding: 4px;
   cursor: pointer;
+  background-color: ${(props) => (props.isCurrentScheduleItem ? "rgba(21, 95, 168, 0.8)" : "none")};
+  color: ${(props) => (props.isCurrentScheduleItem ? "white" : "black")};
+  border-radius: 6px;
+  font-weight: 200;
 `;
 
 const PopUpCloseZone = styled.div`
@@ -31,13 +62,26 @@ const Content = styled.div`
   width: fit-content;
   position: absolute;
   z-index: 10;
-  padding: 6px;
-  background-color: #aeaec4;
+  padding: 20px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.2);
 `;
 
 const DatePickerField = styled.input`
   position: relative;
   z-index: 11;
+  text-align: center;
+  width: 90px;
+  padding: 6px 7px;
+  background: none;
+  border: 1px solid #afa8a8;
+  border-radius: 6px;
+  cursor: pointer;
+  outline: none;
+
+  &:focus {
+    border: 1px solid #155fa8;  
+  }
 `;
 
 const ScheduleNavigation = styled.div`
@@ -71,134 +115,6 @@ const CreateNavigationArrow = ({
     </svg>
   );
 };
-
-
-const getTableSchema = (schema: any) => ({
-  month: schema.month,
-  year: schema.year,
-  scheduleTable: schema.scheduleTable,
-});
-
-const getTableDaySchema = (schema: any) => ({
-  month: schema.month,
-  year: schema.year,
-  day: schema.day,
-  monthOrder: schema.monthOrder,
-});
-// const DatePickerFieldHandWriteHandler = (
-//   e: ChangeEvent<HTMLInputElement>
-// ) => {
-//   const onlyDate = e.target.value.length
-//     ? `${e.target.value.replaceAll(/\D/g, "")}`
-//     : ""; // get only numbers
-//   const pointsCounter = e.target.value.length - onlyDate.length;
-//   try {
-//     // check does user write a point e.g 20.05 is correct 2005 isn't correct
-//     if (
-//       (/^\d+$/g.test(e.target.value) && e.target.value.length === 3) ||
-//       (/^\d+$/g.test(e.target.value) && e.target.value.length === 4) ||
-//       (/^\d+$/g.test(e.target.value) && e.target.value.length === 8)
-//     ) {
-//       throw new Error();
-//     }
-
-//     const getScheduleByOptions = (options: {
-//       isDay?: boolean;
-//       isMonth?: boolean;
-//       isYear?: boolean;
-//     }) => {
-//       const day = +`${onlyDate.slice(0, 2)}`;
-//       const month = +`${onlyDate.slice(2, 4)}`;
-//       const year = +`${onlyDate.slice(4, 8)}`;
-//       return new Promise<{ idx: number; scheduleDay: ScheduleDay }>(
-//         (resolve) => {
-//           const hasUserDate = scheduleTable.findIndex(
-//             (scheduleTableItem, idx) => {
-//               scheduleTableItem[1].scheduleTable.filter(
-//                 (scheduleDay: ScheduleDay) => {
-//                   if (
-//                     (options.isDay && scheduleDay.day === day) ||
-//                     (options.isMonth &&
-//                       scheduleDay.day === day &&
-//                       getMonthName(
-//                         new Date(new Date().setMonth(month - 1))
-//                       ) === scheduleDay.month) ||
-//                     (scheduleDay.day === day &&
-//                       getMonthName(
-//                         new Date(new Date().setMonth(month - 1))
-//                       ) === scheduleDay.month &&
-//                       year === +scheduleDay.year)
-//                   ) {
-//                     resolve({ scheduleDay, idx });
-//                   }
-//                 }
-//               );
-//             }
-//           );
-
-//           if (hasUserDate === -1) {
-//             throw new Error();
-//           }
-//         }
-//       );
-//     };
-
-//     if (e.target.value.length === 2 && pointsCounter === 0) {
-//       getScheduleByOptions({ isDay: true }).then((r) => {
-//         setCurrentDay(r.scheduleDay.day);
-//         setCurrentTab(r.idx);
-//         setDatepickerValue(`${e.target.value}${datepickerValue.slice(2)}`);
-//       });
-//     } else if (
-//       e.target.value.length === 5 &&
-//       +onlyDate.slice(2, 4) < 13 &&
-//       pointsCounter === 1
-//     ) {
-//       getScheduleByOptions({ isMonth: true }).then((r) => {
-//         setCurrentDay(r.scheduleDay.day);
-//         setCurrentTab(r.idx);
-//         setDatepickerValue(
-//           `${datepickerValue.slice(0, 2)}.${e.target.value.slice(
-//             3,
-//             5
-//           )}.${datepickerValue.slice(6, 10)}`
-//         );
-//       });
-//     } else if (
-//       e.target.value.length === 10 &&
-//       +onlyDate.slice(4, 8) < props.maxYear &&
-//       pointsCounter === 2
-//     ) {
-//       getScheduleByOptions({ isYear: true }).then((r) => {
-//         setCurrentDay(r.scheduleDay.day);
-//         setCurrentTab(r.idx);
-//         setDatepickerValue(
-//           `${datepickerValue.slice(0, 5)}.${e.target.value.slice(6, 10)}`
-//         );
-//       });
-//     } else if (onlyDate.length === 0) {
-//       throw new Error();
-//     }
-//   } catch {
-//     setCurrentTab(0);
-//     setDatepickerValue('');
-//     setCurrentDay(new Date().getDate());
-//   }
-// };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -239,23 +155,13 @@ const months = [
   "декабрь",
 ];
 
-const days = [
-  "пн",
-  "вт",
-  "ср",
-  "чт",
-  "пт",
-  "сб",
-  "вс",
-];
-
 const zeroPrefix = (date: number) => `${date}`.length === 1 ? `0${date}` : `${date}`;
 
 function useDatepicker() {
-  const [datepickerValue, setDatepickerValue] = useState<string>(`${zeroPrefix(new Date().getDate())}.${zeroPrefix(new Date().getMonth())}.${new Date().getFullYear()}`);
+  const [datepickerValue, setDatepickerValue] = useState<string>(`${zeroPrefix(new Date().getDate())}.${zeroPrefix(new Date().getMonth() + 1)}.${new Date().getFullYear()}`);
   const [lastYear, setLastYear] = useState(new Date().getFullYear());
-  const [currentDay, setCurrentDay] = useState(new Date().getDate());
-  const [currentTab, setCurrentTab] = useState(0);
+  const [currentDay, setCurrentDay] = useState<Date>(new Date());
+  const [currentTab, setCurrentTab] = useState(new Date().getMonth());
 
   const isDisabledPrevious = lastYear === 1800;
   const isDisabledNext = lastYear === 3000;
@@ -321,7 +227,7 @@ function useDatepicker() {
       }
     }
 
-    setCurrentDay(day);
+    setCurrentDay(new Date(year, month - 1, day));
   }
 
   return {
@@ -332,7 +238,7 @@ function useDatepicker() {
     datepickerValue,
     currentDay,
 
-    changeCurrentDay: (day: number) => {
+    changeCurrentDay: (day: Date) => {
       setCurrentDay(day);
     },
 
@@ -346,6 +252,13 @@ function useDatepicker() {
         setCurrentTab(11);
       } else {
         setCurrentTab(Math.abs(currentTab) - 1);
+      }
+    
+      if (
+        oneFullYear[currentTab].month === months[currentDay?.getMonth()]
+        && +oneFullYear[currentTab].year === currentDay?.getFullYear()
+      ) {
+        setCurrentDay(currentDay);
       }
     },
 
@@ -364,6 +277,13 @@ function useDatepicker() {
       } else {
         setCurrentTab(currentTab + 1);
       }
+
+      if (
+        oneFullYear[currentTab].month === months[currentDay?.getMonth()]
+        && +oneFullYear[currentTab].year === currentDay?.getFullYear()
+      ) {
+        setCurrentDay(currentDay);
+      }
     }
   }
 }
@@ -372,7 +292,6 @@ export const Datepicker = () => {
   const [isShowPopup, setPopup] = useState(false);
 
   const { scheduleTable, datepickerValue, findCloseDate, currentDay, changeCurrentDay, currentTab, updateDatepickerValue, previousMonth, nextMonth } = useDatepicker();
-  console.warn(datepickerValue);
   const datePickerField = useRef<HTMLInputElement | null>(null);
 
   return (  
@@ -406,42 +325,57 @@ export const Datepicker = () => {
             datePickerField.current?.focus();
           }}>
             <Title>
-              {scheduleTable[currentTab].month +
-                ", " +
-                scheduleTable[currentTab].year}
-            </Title>
-
-            <ScheduleNavigation>
               <CreateNavigationArrow
                 direction="M4 12L20 12M4 12L10 6M4 12L10 18"
                 switchNavigation={previousMonth}
               />
 
+              <MonthYear>
+                {`${scheduleTable[currentTab].month[0].toUpperCase() + scheduleTable[currentTab].month.slice(1)}` +
+                  ", " +
+                  scheduleTable[currentTab].year}
+              </MonthYear>
+
               <CreateNavigationArrow
                 direction="M20 12L4 12M20 12L14 18M20 12L14 6"
                 switchNavigation={nextMonth}
               />
-            </ScheduleNavigation>
+            </Title>
 
-            <Schedule>
-              {scheduleTable[currentTab].schedule.map(
-                (day: any, key: number) => {
-                  return (
-                    <ScheduleItem
-                      key={key}
-                      onClick={() => {
-                        changeCurrentDay(day.getDate());
-                        updateDatepickerValue(`${zeroPrefix(day.getDate())}.${zeroPrefix(day.getMonth() + 1)}.${day.getFullYear()}`)
-                      }}
-                      isCurrentScheduleItem={day.getDate() === currentDay}>
-                      {day.getDate()}
-                      <br />
-                      {days[day.getDay()]}
-                    </ScheduleItem>
-                  );
-                }
-              )}
-            </Schedule>
+            <ScheduleWrapper>
+              <Schedule>
+                <span>пн</span>
+                <span>вт</span>
+                <span>ср</span>
+                <span>чт</span>
+                <span>пт</span>
+                <span>сб</span>
+                <span>вс</span>
+
+              </Schedule>
+              
+              <ScheduleItems>
+                {scheduleTable[currentTab].schedule.map(
+                  (day: any, key: number) => {
+                    return (
+                      <ScheduleItem
+                        key={key}
+                        onClick={() => {
+                          changeCurrentDay(day);
+                          updateDatepickerValue(`${zeroPrefix(day.getDate())}.${zeroPrefix(day.getMonth() + 1)}.${day.getFullYear()}`)
+                        }}
+                        isCurrentScheduleItem={
+                          day.getDate() === currentDay?.getDate()
+                          && day.getMonth() === currentDay?.getMonth()
+                          && day.getFullYear() === currentDay?.getFullYear()
+                        }>
+                        {day.getDate()}
+                      </ScheduleItem>
+                    );
+                  }
+                )}
+              </ScheduleItems>
+            </ScheduleWrapper>
           </Content>
         </>
       )}
