@@ -240,7 +240,11 @@ const months = [
 
 
 function useDatepicker() {
-  const [lastYear, setLastYear] = useState(1800);
+  const [lastYear, setLastYear] = useState(new Date().getFullYear());
+  const [currentTab, setCurrentTab] = useState(0);
+
+  const isDisabledPrevious = lastYear === 1800;
+  const isDisabledNext = lastYear === 3000;
 
   const getYearSchema = () => Array.from({ length: Math.abs(12) }).map(() => ({ month: '', schedule: [] as Date[], year: '' }));
   let oneFullYear = getYearSchema();
@@ -280,8 +284,12 @@ function useDatepicker() {
       }
 
       if (oneFullYear[currentMonthOrder].month === '') {
-        oneFullYear[currentMonthOrder].month = months[currentMonth];
+        oneFullYear[currentMonthOrder].month = months[month - 1];
         oneFullYear[currentMonthOrder].year = `${year}`;
+      }
+
+      if (currentMonth === 10) {
+        setCurrentTab(month);
       }
 
       for (
@@ -297,109 +305,98 @@ function useDatepicker() {
     }
   }
 
-  console.warn(oneFullYear);
   return {
     scheduleTable: oneFullYear,
-    isDisabledNext: false,
-    nextYear: () => {
-      setLastYear(prev => prev + 1 === 3000 ? 3000 : prev + 1);
-    },
+    currentTab,
+
     findCloseDate,
-    previousYear: () => {
-      setLastYear(prev => prev - 1 === 1800 ? 1800 : prev - 1);
+
+    previousMonth: () => {
+      if (isDisabledPrevious) {
+        return null;
+      }
+    
+      if (Math.abs(currentTab) - 1 === -1) {
+        setLastYear(prev => prev - 1);
+        setCurrentTab(11);
+      } else {
+        setCurrentTab(Math.abs(currentTab) - 1);
+      }
+    },
+
+    nextMonth: () => {
+      if (isDisabledNext) {
+        return null;
+      }
+
+      if (currentTab + 1 === 12) {
+        setLastYear(prev => prev + 1);
+        setCurrentTab(0);
+      } else {
+        setCurrentTab(currentTab + 1);
+      }
     }
   }
 }
 
-export const Datepicker = (props: any) => {
+export const Datepicker = () => {
   const [datepickerValue, setDatepickerValue] = useState<string>("");
   const [isShowPopup, setPopup] = useState(false);
-  const [currentTab, setCurrentTab] = useState(0);
   const [currentDay, setCurrentDay] = useState(new Date().getDate());
-  const [isPickSchedule, setPickSchedule] = useState(false);
-  const [isFocus, setFocus] = useState(false);
 
-  const { scheduleTable, findCloseDate, isDisabledNext, nextYear, previousYear } = useDatepicker();
-  console.warn(scheduleTable);
+  const { scheduleTable, findCloseDate, currentTab, previousMonth, nextMonth } = useDatepicker();
+  
+  const datePickerField = useRef<HTMLInputElement | null>(null);
+
   return (  
     <>
       <DatePickerField
+        ref={datePickerField}
         type="text"
         aria-label="Выбрать время"
         role={"search"}
         onChange={(e) => findCloseDate(e.target.value)}
-        placeholder="дд.мм.ггггг"
+        onClick={() => setPopup(true)}
+        placeholder="дд.мм.гггг"
       ></DatePickerField>
-
-      <span onClick={isDisabledNext ? () => null : nextYear}>
-        next year
-      </span>
-      <br />
-      <span onClick={previousYear}>
-        previous year
-      </span>
-
-      {/* {isShowPopup && (
+      
+      {isShowPopup && (
         <>
           <PopUpCloseZone
             onClick={() => {
-            setFocus(false);
-              setPopup(false);
+              datePickerField.current?.blur();
             }}
           />
 
-          <Content>
+          <Content onClick={() => {
+            datePickerField.current?.focus();
+          }}>
             <Title>
-              {scheduleTable[currentTab][1].month +
+              {scheduleTable[currentTab === 0 ? 0 : currentTab - 1].month +
                 ", " +
-                scheduleTable[currentTab][1].year}
+                scheduleTable[currentTab].year}
             </Title>
 
             <ScheduleNavigation>
               <CreateNavigationArrow
                 direction="M4 12L20 12M4 12L10 6M4 12L10 18"
-                switchNavigation={() => {
-                  setCurrentTab(
-                    currentTab - 1 === -1
-                      ? Math.abs(
-                          12 * (new Date().getFullYear() - props.maxYear)
-                        )
-                      : currentTab - 1
-                  );
-                }}
+                switchNavigation={previousMonth}
               />
 
               <CreateNavigationArrow
                 direction="M20 12L4 12M20 12L14 18M20 12L14 6"
-                switchNavigation={() => {
-                  setCurrentTab(
-                    currentTab + 1 ===
-                      -(12 * +(new Date().getFullYear() - props.maxYear) - 1)
-                      ? 0
-                      : currentTab + 1
-                  );
-                }}
+                switchNavigation={nextMonth}
               />
             </ScheduleNavigation>
 
             <Schedule>
-              {scheduleTable[currentTab][1].scheduleTable.map(
-                (day: ScheduleDay, key: number) => {
+              {scheduleTable[currentTab].schedule.map(
+                (day: any, key: number) => {
                   return (
                     <ScheduleItem
                       key={key}
-                      isCurrentScheduleItem={day.day === currentDay}
-                      onClick={() => {
-                        setDatepickerValue(
-                          `${formatSingleDate(day.day)}.${formatSingleDate(
-                            day.monthOrder
-                          )}.${day.year}`
-                        );
-                        setPickSchedule(true);
-                        setCurrentDay(+day.day);
-                      }}
-                    >
-                      {day.day}
+                      isCurrentScheduleItem={day.day === currentDay}>
+                      {day.getDate()}
                     </ScheduleItem>
                   );
                 }
@@ -407,7 +404,7 @@ export const Datepicker = (props: any) => {
             </Schedule>
           </Content>
         </>
-      )} */}
+      )}
     </>
   );
 };
