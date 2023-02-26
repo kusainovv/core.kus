@@ -242,14 +242,10 @@ const months = [
 function useDatepicker() {
   const [lastYear, setLastYear] = useState(1800);
 
-  let oneFullYear = Array.from({ length: Math.abs(12) }).map(() => ({ month: '', schedule: [], year: '' }));
+  const getYearSchema = () => Array.from({ length: Math.abs(12) }).map(() => ({ month: '', schedule: [] as Date[], year: '' }));
+  let oneFullYear = getYearSchema();
 
   for (let currentMonthOrder = 0, currentMonth = 0; currentMonthOrder < 12; ++currentMonthOrder, ++currentMonth) {
-    if (currentMonth % 12 === 0 && currentMonth !== 0) {
-      setLastYear(new Date(lastYear, currentMonth, 0, 0, 0, 0).getFullYear());
-      currentMonth = 0;
-    }
-
     if (oneFullYear[currentMonthOrder].month === '') {
       oneFullYear[currentMonthOrder].month = months[currentMonth];
       oneFullYear[currentMonthOrder].year = `${lastYear}`;
@@ -269,7 +265,7 @@ function useDatepicker() {
 
 
   const findCloseDate = (date: string) => {
-    oneFullYear = Array.from({ length: Math.abs(12) }).map(() => ({ month: '', schedule: [], year: '' }));
+    oneFullYear = getYearSchema();
     const day = +date.slice(0, 2);
     const month = +date.slice(3, 5);
     const year = +date.slice(6, 10);
@@ -278,7 +274,7 @@ function useDatepicker() {
     }
 
     for (let currentMonthOrder = 0, currentMonth = 0; currentMonthOrder < 12; ++currentMonthOrder, ++currentMonth) {
-      if (currentMonth % 12 === 0 && currentMonth !== 0) {
+      if (currentMonth % 11 === 0 && currentMonth !== 0) {
         setLastYear(new Date(year, currentMonth, 0, 0, 0, 0).getFullYear());
         currentMonth = 0;
       }
@@ -299,10 +295,9 @@ function useDatepicker() {
         }
       }
     }
-
-    console.warn(oneFullYear)
   }
 
+  console.warn(oneFullYear);
   return {
     scheduleTable: oneFullYear,
     isDisabledNext: false,
