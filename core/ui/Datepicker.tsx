@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
-import { ChangeEvent, ChangeEventHandler, createRef, useEffect, useRef, useState } from "react";
-import { debounce } from "../utils/debounce";
+import { useRef, useState } from "react";
 
 const Title = styled.div`
   margin: 0;
@@ -84,12 +83,6 @@ const DatePickerField = styled.input`
   }
 `;
 
-const ScheduleNavigation = styled.div`
-  margin: 4px 0 10px 0;
-  display: flex;
-  justify-content: space-around;
-`;
-
 const CreateNavigationArrow = ({
   direction,
   switchNavigation,
@@ -116,30 +109,6 @@ const CreateNavigationArrow = ({
   );
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const months = [
   "январь",
   "февраль",
@@ -163,17 +132,15 @@ function useDatepicker() {
   const [currentDay, setCurrentDay] = useState<Date>(new Date());
   const [currentTab, setCurrentTab] = useState(new Date().getMonth());
 
-  const isDisabledPrevious = lastYear === 1800;
-  const isDisabledNext = lastYear === 3000;
-
-  const getYearSchema = () => Array.from({ length: Math.abs(12) }).map(() => ({ month: '', schedule: [] as Date[], year: '' }));
-  let oneFullYear = getYearSchema();
+  const getEmptySchema = () => Array.from({ length: Math.abs(12) }).map(() => ({ month: '', schedule: [] as Date[], year: '' }));
+  let oneFullYear = getEmptySchema();
 
   for (let currentMonthOrder = 0, currentMonth = 0; currentMonthOrder < 12; ++currentMonthOrder, ++currentMonth) {
     if (oneFullYear[currentMonthOrder].month === '') {
       oneFullYear[currentMonthOrder].month = months[currentMonth];
       oneFullYear[currentMonthOrder].year = `${lastYear}`;
     }
+
     for (
       let currentDay = 1;
       currentDay <= new Date(lastYear, currentMonth + 1, 0, 23, 59, 59).getDate();
@@ -188,13 +155,16 @@ function useDatepicker() {
 
   const findCloseDate = (date: string) => {
     setDatepickerValue(date);
-    
-    oneFullYear = getYearSchema();
+    oneFullYear = getEmptySchema();
+
     const day = +date.slice(0, 2);
     const month = +date.slice(3, 5);
     const year = +date.slice(6, 10);
+
     if (
       day > 31 || month > 12 
+      || month < 1
+      || day < 0
       || year > 3000 || year < 1800 
       || (date.replace(/\D/g,'').length !== date.length - 2) && !date.replace(/\D/g,'').length) {
       return null;
@@ -217,7 +187,7 @@ function useDatepicker() {
 
       for (
         let currentDay = 1;
-        currentDay < new Date(year, currentMonth + 1, 0, 23, 59, 59).getDate();
+        currentDay < new Date(year, currentMonth + 1, 0).getDate();
         ++currentDay
       ) {
         if (new Date(year, currentMonth, 0).getDate() > oneFullYear[currentMonthOrder].schedule.length) {
@@ -228,6 +198,16 @@ function useDatepicker() {
     }
 
     setCurrentDay(new Date(year, month - 1, day));
+  }
+
+
+  const isCurrentMonthIncludesDay = () => {
+    if (
+      oneFullYear[currentTab].month === months[currentDay?.getMonth()]
+      && +oneFullYear[currentTab].year === currentDay?.getFullYear()
+    ) {
+      setCurrentDay(currentDay);
+    }
   }
 
   return {
@@ -243,7 +223,7 @@ function useDatepicker() {
     },
 
     previousMonth: () => {
-      if (isDisabledPrevious) {
+      if (lastYear === 1800) {
         return null;
       }
     
@@ -254,12 +234,7 @@ function useDatepicker() {
         setCurrentTab(Math.abs(currentTab) - 1);
       }
     
-      if (
-        oneFullYear[currentTab].month === months[currentDay?.getMonth()]
-        && +oneFullYear[currentTab].year === currentDay?.getFullYear()
-      ) {
-        setCurrentDay(currentDay);
-      }
+      isCurrentMonthIncludesDay();
     },
 
     updateDatepickerValue: (datepickerValue: string) => {
@@ -267,7 +242,7 @@ function useDatepicker() {
     },
 
     nextMonth: () => {
-      if (isDisabledNext) {
+      if (lastYear === 3000) {
         return null;
       }
 
@@ -278,12 +253,7 @@ function useDatepicker() {
         setCurrentTab(currentTab + 1);
       }
 
-      if (
-        oneFullYear[currentTab].month === months[currentDay?.getMonth()]
-        && +oneFullYear[currentTab].year === currentDay?.getFullYear()
-      ) {
-        setCurrentDay(currentDay);
-      }
+      isCurrentMonthIncludesDay();
     }
   }
 }
@@ -356,7 +326,7 @@ export const Datepicker = () => {
               
               <ScheduleItems>
                 {scheduleTable[currentTab].schedule.map(
-                  (day: any, key: number) => {
+                  (day, key: number) => {
                     return (
                       <ScheduleItem
                         key={key}
