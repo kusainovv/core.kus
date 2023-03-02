@@ -126,7 +126,7 @@ const months = [
 
 const zeroPrefix = (date: number) => `${date}`.length === 1 ? `0${date}` : `${date}`;
 
-function useDatepicker() {
+function useDatepicker(minYear: number, maxYear: number) {
   const [datepickerValue, setDatepickerValue] = useState<string>(`${zeroPrefix(new Date().getDate())}.${zeroPrefix(new Date().getMonth() + 1)}.${new Date().getFullYear()}`);
   const [lastYear, setLastYear] = useState(new Date().getFullYear());
   const [currentDay, setCurrentDay] = useState<Date>(new Date());
@@ -165,7 +165,7 @@ function useDatepicker() {
       day > 31 || month > 12 
       || month < 1
       || day < 0
-      || year > 3000 || year < 1800 
+      || year > maxYear || year < minYear 
       || (date.replace(/\D/g,'').length !== date.length - 2) && !date.replace(/\D/g,'').length) {
       return null;
     }
@@ -223,7 +223,7 @@ function useDatepicker() {
     },
 
     previousMonth: () => {
-      if (lastYear === 1800) {
+      if (lastYear === minYear) {
         return null;
       }
     
@@ -242,7 +242,7 @@ function useDatepicker() {
     },
 
     nextMonth: () => {
-      if (lastYear === 3000) {
+      if (lastYear === maxYear) {
         return null;
       }
 
@@ -258,10 +258,15 @@ function useDatepicker() {
   }
 }
 
-export const Datepicker = () => {
+export interface DatepickerProps {
+  minYear: number,
+  maxYear: number
+}
+
+export const Datepicker = (props: DatepickerProps) => {
   const [isShowPopup, setPopup] = useState(false);
 
-  const { scheduleTable, datepickerValue, findCloseDate, currentDay, changeCurrentDay, currentTab, updateDatepickerValue, previousMonth, nextMonth } = useDatepicker();
+  const { scheduleTable, datepickerValue, findCloseDate, currentDay, changeCurrentDay, currentTab, updateDatepickerValue, previousMonth, nextMonth } = useDatepicker(props.minYear, props.maxYear);
   const datePickerField = useRef<HTMLInputElement | null>(null);
 
   return (  

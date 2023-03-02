@@ -106,6 +106,7 @@ export const NotificationsProvider: React.FC<{
     return () => {
       clearInterval(runHiddeTimer);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notifications?.length]);
 
   const notify = (args: NotifyConfig) => {
